@@ -18,7 +18,6 @@
         nextplease.openDirection(message.command);
     });
 
-    nextplease.consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
     nextplease.prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
     nextplease.bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].getService(Components.interfaces.nsIStringBundleService);
     nextplease.promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
@@ -49,7 +48,7 @@
 
     nextplease.log = function (message) {
         if (nextplease.DEBUG) {
-            nextplease.consoleService.logStringMessage("NextPlease: " + message);
+            console.log("NextPlease: " + message);
             //if (nextplease.DEBUG_FILE && nextplease._outputStream) {
             //    nextplease._outputStream.write(message, message.length);
             //}
@@ -58,14 +57,14 @@
 
     nextplease.logDetail = function (message) {
         if (nextplease.DEBUG_DETAILED) {
-            nextplease.consoleService.logStringMessage("NextPlease: " + message);
+            console.debug("NextPlease: " + message);
             //if (nextplease.DEBUG_FILE && nextplease._outputStream) {
             //    nextplease._outputStream.write(message, message.length);
             //}
         }
     };
 
-    nextplease.logError = Components.utils.reportError;
+    nextplease.logError = console.error;
 
     nextplease.getDirectionString = function (dir) {
         return nextplease.strings.GetStringFromName(dir + "Page1");
