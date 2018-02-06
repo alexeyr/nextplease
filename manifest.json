@@ -17,10 +17,48 @@
         "default_popup": "popup/nextplease_popup.html",
         "browser_style": true
     },
+  
+    "commands": {
+        "Next": {
+            "suggested_key": {
+                "default": "Alt+Shift+Right"
+            },
+            "description": "__MSG_NextPageCommand__"
+        },
+        "Prev": {
+            "suggested_key": {
+                "default": "Alt+Shift+Left"
+            },
+            "description": "__MSG_PrevPageCommand__"
+        },
+        "First": {
+            "suggested_key": {
+                "default": "Alt+Shift+Up"
+            },
+            "description": "__MSG_FirstPageCommand__"
+        },
+        "Last": {
+            "suggested_key": {
+                "default": "Alt+Shift+Down"
+            },
+            "description": "__MSG_LastPageCommand__"
+        }
+    },
+
+    "options_ui": {
+        "page": "options/options.html",
+        "browser_style": true,
+        "chrome_style": true
+    },
 
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
+
+    "background": {
+        "scripts": ["background/nextplease.js"]
+    },
 
     "content_scripts": [
         {

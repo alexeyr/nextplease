@@ -64,7 +64,7 @@
         "description": "Title of the click notification."
     },
     "PrevPage": {
-        "message": "prev page",
+        "message": "previous page",
         "description": "Title of the click notification."
     },
     "FirstPage": {
@@ -73,6 +73,22 @@
     },
     "LastPage": {
         "message": "last page",
+        "description": "Title of the click notification."
+    },
+    "NextPageCommand": {
+        "message": "Go to the next page",
+        "description": "Title of the click notification."
+    },
+    "PrevPageCommand": {
+        "message": "Go to the previous page",
+        "description": "Title of the click notification."
+    },
+    "FirstPageCommand": {
+        "message": "Go to the first page",
+        "description": "Title of the click notification."
+    },
+    "LastPageCommand": {
+        "message": "Go to the last page",
         "description": "Title of the click notification."
     },
     "enableNumberShortcuts": {
