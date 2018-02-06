@@ -8,4 +8,17 @@
     return;
   }
   window.hasRun = true;
+
+ /**
+   * Listen for messages from the popup script.
+   */
+  browser.runtime.onMessage.addListener((message) => {
+    nextplease.openDirection(message.command);
+  });
+
+  var nextplease = {};
+
+  nextplease.openDirection = function(direction) {
+      alert(direction);
+  };
 })();

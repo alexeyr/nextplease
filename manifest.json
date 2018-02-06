@@ -8,8 +8,7 @@
     "default_locale": "en",
 
     "icons": {
-        "32": "icons/nextplease-logo-32.png",
-        "48": "icons/nextplease-logo-32.png"
+        "32": "icons/nextplease-logo-32.png"
     },
 
     "browser_action": {

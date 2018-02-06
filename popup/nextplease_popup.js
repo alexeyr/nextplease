@@ -3,12 +3,10 @@ function listenForClicks() {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             var active_tab = tabs[0];
 
-            alert(e.target.id);
-            // browser.tabs.sendMessage(active_tab.id, {
-            //     command: e.target.id,
-            //     url: active_tab.url
-            // })
-        })
+            browser.tabs.sendMessage(active_tab.id, {
+                command: e.target.id
+            });
+        }).catch(reportExecuteScriptError);
     });
 }
 
@@ -19,7 +17,7 @@ function listenForClicks() {
 function reportExecuteScriptError(error) {
     document.querySelector("#popup-content").classList.add("hidden");
     document.querySelector("#error-content").classList.remove("hidden");
-    console.error(`Failed to execute NextPlease content script: ${error.message}`);
+    console.error(`Failed to execute NextPlease script: ${error.message}`);
 }
 
 browser.tabs.executeScript({ file: "/content_scripts/nextplease.js" })
