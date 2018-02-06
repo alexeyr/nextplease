@@ -19,11 +19,9 @@
     });
 
     nextplease.prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    nextplease.bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].getService(Components.interfaces.nsIStringBundleService);
 
     nextplease.prefs = nextplease.prefService.getBranch("nextplease.").QueryInterface(Components.interfaces.nsIPrefBranch2);
     nextplease.accelKeyPrefs = nextplease.prefService.getBranch("ui.key.accelKey").QueryInterface(Components.interfaces.nsIPrefBranch2);
-    nextplease.strings = nextplease.bundleService.createBundle("chrome://nextplease/locale/nextplease.properties");
 
     nextplease.isMac = /Mac/i.test(window.navigator.platform);
 
@@ -66,26 +64,26 @@
     nextplease.logError = console.error;
 
     nextplease.getDirectionString = function (dir) {
-        return nextplease.strings.GetStringFromName(dir + "Page1");
+        return browser.i18n.getMessage(dir + "Page");
     };
 
     nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
         var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
         var removeConfirmationText =
-            nextplease.strings.formatStringFromName(
+            browser.i18n.getMessage(
                 removeConfirmationKey,
-                [textOrUrl, nextplease.getDirectionString(currentDirection)], 2);
+                [textOrUrl, nextplease.getDirectionString(currentDirection)]);
         return window.confirm(removeConfirmationText);
     };
 
     nextplease.confirmReplace = function (phraseOrImage, textOrUrl, currentDirection, newDirection) {
         var replaceConfirmationKey = "replace" + phraseOrImage + "Confirmation";
         var replaceConfirmationText =
-            nextplease.strings.formatStringFromName(
+            browser.i18n.getMessage(
                 replaceConfirmationKey,
                 [textOrUrl,
                     nextplease.getDirectionString(currentDirection),
-                    nextplease.getDirectionString(newDirection)], 3);
+                    nextplease.getDirectionString(newDirection)]);
         return window.confirm(replaceConfirmationText);
     };
 
@@ -476,7 +474,7 @@
                     nextplease.prefs.clearUserPref(prefnames[i]);
                 }
 
-                var errorMsg = nextplease.strings.GetStringFromName("readingPreferencesFailed");
+                var errorMsg = browser.i18n.getMessage("readingPreferencesFailed");
                 alert(errorMsg);
                 nextplease.retryingToReadPreferences = true;
                 nextplease.readPreferences();
@@ -537,7 +535,7 @@
     };
 
     nextplease.notifyLinkNotFound = function () {
-        nextplease.showInStatusBar(nextplease.strings.GetStringFromName("linkNotFound"));
+        nextplease.showInStatusBar(browser.i18n.getMessage("linkNotFound"));
 
         nextplease.clearStatusBarTimer = setTimeout(nextplease.clearStatusBar, 5000);
     };
@@ -1205,8 +1203,8 @@
                         direction = nextplease.directions[i];
                         elem = getCMItemByDir(direction);
                         propertyKey = (direction === directionForItem ? "remove" : "add") + phraseOrImage + "ContextMenu";
-                        // alert("str = " + nextplease.strings.GetStringFromName(propertyKey) + "; param = " + nextplease.getDirectionString(direction));
-                        elem.label = nextplease.strings.formatStringFromName(propertyKey, [nextplease.getDirectionString(direction)], 1);
+                        // alert("str = " + browser.i18n.getMessage(propertyKey) + "; param = " + nextplease.getDirectionString(direction));
+                        elem.label = browser.i18n.getMessage(propertyKey, [nextplease.getDirectionString(direction)]);
                     }
 
                     gContextMenu.showItem("nextplease-separator", true);
@@ -1315,7 +1313,7 @@
         nextplease.linkNumber = nextplease.linkNumber * 10 + digit;
 
         nextplease.showInStatusBar(
-            nextplease.strings.formatStringFromName("lookingForNumberedLink", [nextplease.linkNumber], 1));
+            browser.i18n.getMessage("lookingForNumberedLink", [nextplease.linkNumber]));
 
         nextplease.NumberShortcutTimer = setTimeout(nextplease.finishNumberShortcut, 500);
     };
