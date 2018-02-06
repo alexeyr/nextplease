@@ -1,0 +1,1 @@
+48 size icon
