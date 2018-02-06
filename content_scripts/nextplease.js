@@ -20,7 +20,6 @@
 
     nextplease.prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
     nextplease.bundleService = Components.classes["@mozilla.org/intl/stringbundle;1"].getService(Components.interfaces.nsIStringBundleService);
-    nextplease.promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
 
     nextplease.prefs = nextplease.prefService.getBranch("nextplease.").QueryInterface(Components.interfaces.nsIPrefBranch2);
     nextplease.accelKeyPrefs = nextplease.prefService.getBranch("ui.key.accelKey").QueryInterface(Components.interfaces.nsIPrefBranch2);
@@ -76,7 +75,7 @@
             nextplease.strings.formatStringFromName(
                 removeConfirmationKey,
                 [textOrUrl, nextplease.getDirectionString(currentDirection)], 2);
-        return nextplease.promptService.confirm(window, "", removeConfirmationText);
+        return window.confirm(removeConfirmationText);
     };
 
     nextplease.confirmReplace = function (phraseOrImage, textOrUrl, currentDirection, newDirection) {
@@ -87,7 +86,7 @@
                 [textOrUrl,
                     nextplease.getDirectionString(currentDirection),
                     nextplease.getDirectionString(newDirection)], 3);
-        return nextplease.promptService.confirm(window, "", replaceConfirmationText);
+        return window.confirm(replaceConfirmationText);
     };
 
     // Initialize the lookup table from keycode to keyname
