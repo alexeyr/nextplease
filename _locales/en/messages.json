@@ -9,6 +9,11 @@
     "description": "Description of the extension."
   },
 
+  "linkNotFound": {
+    "message": "Link not found",
+    "description": "Message shown when a link isn't found."
+  },
+
   "notificationTitle": {
     "message": "Click notification",
     "description": "Title of the click notification."
