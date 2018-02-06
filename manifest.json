@@ -14,7 +14,8 @@
     "browser_action": {
         "default_icon": "icons/nextplease-logo-32.png",
         "default_title": "__MSG_extensionName__",
-        "default_popup": "popup/nextplease_popup.html"
+        "default_popup": "popup/nextplease_popup.html",
+        "browser_style": true
     },
 
     "permissions": [
