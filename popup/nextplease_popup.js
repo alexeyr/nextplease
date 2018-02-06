@@ -2,10 +2,15 @@ function listenForClicks() {
     document.addEventListener("click", (e) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             var active_tab = tabs[0];
+            var command = e.target.id;
 
-            browser.tabs.sendMessage(active_tab.id, {
-                command: e.target.id
-            });
+            if (command === "Options") {
+                browser.runtime.openOptionsPage();
+            } else {
+                browser.tabs.sendMessage(active_tab.id, {
+                    command: command
+                });    
+            }
         }).catch(reportExecuteScriptError);
     });
 }

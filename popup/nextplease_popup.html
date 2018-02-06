@@ -9,14 +9,16 @@
 
 <body>
     <div id="popup-content">
-        <div id="First" class="button">First</div>
-        <div id="Prev" class="button">Prev</div>
-        <div id="Next" class="button">Next</div>
-        <div id="Last" class="button">Last</div>
+        <div id="First" class="button" data-i18n="FirstPageCommand">First</div>
+        <div id="Prev" class="button" data-i18n="PrevPageCommand">Prev</div>
+        <div id="Next" class="button" data-i18n="NextPageCommand">Next</div>
+        <div id="Last" class="button" data-i18n="LastPageCommand">Last</div>
+        <div id="Options" class="button" data-i18n="OptionsPage">Options</div>
     </div>
     <div id="error-content" class="hidden">
-        <p>Can't find desired link.</p>
+        <p data-i18n="popupError">Can't find desired link.</p>
     </div>
+    <script src="../translate.js"></script>
     <script src="nextplease_popup.js"></script>
 </body>
 
