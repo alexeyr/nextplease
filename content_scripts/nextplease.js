@@ -33,12 +33,6 @@
     //     default: nextplease.accelKey = (nextplease.isMac ? "meta" : "control");
     // }
 
-    // Strip leading and trailing whitespace from
-    // the passed in string and return it.
-    nextplease.Trim = function (str) {
-        return str.replace(/^\s+/, "").replace(/\s+$/, "");
-    };
-
     // nextplease.getModifierPref = function (prefname) {
     //     // "ctrl" can come from old versions
     //     return nextplease.prefs.getCharPref(prefname).toLowerCase().replace(/\+/g, " ").replace(nextplease.accelKey, "accel").replace("ctrl", "control");
@@ -713,7 +707,7 @@
             }
 
             range.selectNode(link);
-            text = nextplease.Trim(range.toString());
+            text = range.toString().trim();
 
             if (link.href.indexOf("/dictionary") < 0) {
                 direction1 = nextplease.directionFromText(text, direction, prefetching);
@@ -967,7 +961,7 @@
 
         for (i = 0; i < inputsNum; i++) {
             var input = inputs[i];
-            text = nextplease.Trim(input.value);
+            text = input.value.trim();
 
             direction1 = nextplease.directionFromText(text, direction, prefetching);
             if (direction === direction1) {
@@ -983,7 +977,7 @@
         for (i = 0; i < buttonsNum; i++) {
             var button = buttons[i];
             range.selectNode(button);
-            text = nextplease.Trim(range.toString());
+            text = range.toString().trim();
 
             direction1 = nextplease.directionFromText(text, direction, prefetching);
             if (direction === direction1) {
@@ -1069,7 +1063,7 @@
         for (i = alinks.length - 1; i >= 0; i--) {
             var link = alinks[i];
 
-            text = nextplease.Trim(link.text);
+            text = link.text.trim();
 
             var intMatches = isInt.exec(text);
             if (intMatches) {
@@ -1279,7 +1273,7 @@
             } else {
                 var range = document.createRange();
                 range.selectNode(document.popupNode);
-                return nextplease.Trim(range.toString());
+                return range.toString().trim();
             }
         } else {
             return undefined;
