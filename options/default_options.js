@@ -9,7 +9,7 @@ function initDefaultOptions(prefs) {
     init("allowsmartnext", false);
     init("checkframes", true);
 
-    init("prefetch", 0);
+    init("prefetch", 2);
 
     init("nextkey", 39); // KeyEvent.DOM_VK_RIGHT
     init("prevkey", 37); // KeyEvent.DOM_VK_LEFT
@@ -38,21 +38,20 @@ function initDefaultOptions(prefs) {
     init("lastregex", "^last(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$");
     init("galleryregex", "^(.*\\D)(\\d+)((?:\\.\\w+|[\\/])?)$");
 
-    init("nextphrase.expr0", "|Next|next|Next >|next >|>|Next »|next »|»|Next >>|next >>|>>|MORE RESULTS|Newer »|Older topics »|next page|Go to the next photo in the stream");
-    init("prevphrase.expr0", "|Previous|previous|Prev|prev|< Previous|< previous|PREVIOUS RESULTS|< Prev|< prev|<|« Prev|« prev|«|<< Prev|<< prev|<<|« Older|« Newer topics|previous page|Go to the previous photo in the stream");
-    init("firstphrase.expr0", "|First|first|< First|< first|first page|« first|« First");
-    init("lastphrase.expr0", "|Last|last|Last >|last >|last page|last »|Last »");
+    init("nextphrase.expr0", "next|next >|>|next »|»|next >>|>>|more results|newer »|older topics »|next page|go to the next photo in the stream");
+    init("prevphrase.expr0", "previous|prev|< previous|previous results|< prev|<|« prev|«|<< prev|<<|« older|« newer topics|previous page|go to the previous photo in the stream");
+    init("firstphrase.expr0", "first|< first|first page|« first");
+    init("lastphrase.expr0", "last|last >|last page|last »");
 
-    init("nextimage.expr0", "|http://g-images.amazon.com/images/G/01/search-browse/button-more-results.gif");
-    init("previmage.expr0", "|http://g-images.amazon.com/images/G/01/search-browse/button-previous.gif");
+    init("nextimage.expr0", "http://g-images.amazon.com/images/G/01/search-browse/button-more-results.gif");
+    init("previmage.expr0", "http://g-images.amazon.com/images/G/01/search-browse/button-previous.gif");
     init("firstimage.expr0", "");
     init("lastimage.expr0", "");
 
-    init("log", false);
-    init("logDetailed", false);
+    init("logLevel", 0);
 
     init("highlight", false);
-    init("highlightColor", "#FF0000");
+    init("highlightColor", "#ff0000");
     init("highlightPrefetched", false);
-    init("highlightPrefetchedColor", "#FF6666");
+    init("highlightPrefetchedColor", "#ff6666");
 }

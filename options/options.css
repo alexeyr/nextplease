@@ -1,70 +1,32 @@
-/* from https://codepen.io/raubaca/pen/PZzpVe */
-/* Accordeon styles */
-.tab {
-    position: relative;
-    margin-bottom: 1px;
-    width: 100%;
-    color: #fff;
-    overflow: hidden;
-  }
-  input {
-    position: absolute;
-    opacity: 0;
-    z-index: -1;
-  }
-  label {
-    position: relative;
-    display: block;
-    padding: 0 0 0 1em;
-    background: #16a085;
-    font-weight: bold;
-    line-height: 3;
-    cursor: pointer;
-  }
-  .blue label {
-    background: #2980b9;
-  }
-  .tab-content {
-    max-height: 0;
-    overflow: hidden;
-    background: #1abc9c;
-    -webkit-transition: max-height .35s;
-    -o-transition: max-height .35s;
-    transition: max-height .35s;
-  }
-  .blue .tab-content {
-    background: #3498db;
-  }
-  .tab-content p {
-    margin: 1em;
-  }
-  /* :checked */
-  input:checked ~ .tab-content {
-    max-height: 10em;
-  }
-  /* Icon */
-  label::after {
-    position: absolute;
-    right: 0;
-    top: 0;
-    display: block;
-    width: 3em;
-    height: 3em;
-    line-height: 3;
-    text-align: center;
-    -webkit-transition: all .35s;
-    -o-transition: all .35s;
-    transition: all .35s;
-  }
-  input[type=checkbox] + label::after {
-    content: "+";
-  }
-  input[type=radio] + label::after {
-    content: "\25BC";
-  }
-  input[type=checkbox]:checked + label::after {
-    transform: rotate(315deg);
-  }
-  input[type=radio]:checked + label::after {
-    transform: rotateX(180deg);
-  }
+input, label, select, button {
+  vertical-align: middle;
+}
+.no-scroll {
+  overflow: hidden;
+}
+.directions {
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  border: solid darkgrey 1pt;
+  float: left;
+}
+#matchesDirection {
+  padding: 10px;
+  margin: -5px -20px -5px -5px;
+}
+.fl {
+  float: left
+}
+.pb10 {
+  padding-bottom: 10pt
+}
+.w100 {
+  width: 100%;
+}
+.lh3 {
+  line-height: 3em;
+}
+.cb {
+  clear: both;
+}

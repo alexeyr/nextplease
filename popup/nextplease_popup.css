@@ -1,11 +1,24 @@
 html, body {
-    width: 100px;
+    width: 100pt;
   }
   
   .hidden {
     display: none;
   }
   
+  .icons {
+    width:80px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5pt;
+    margin-bottom: 25pt;
+}
+
+  .gotopage {
+    clear: both;
+    text-align: center;
+   }
+
   .button {
     margin: 3% auto;
     padding: 4px;
@@ -13,8 +26,41 @@ html, body {
     font-size: 1.5em;
     cursor: pointer;
     background-color: #E5F2F2;
+    clear: both;
   }
   
   .button:hover {
     background-color: #CFF2F2;
+  }
+
+  #First {
+    background-image: url(../icons/first.png);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    float: left;
+  }
+
+  #Prev {
+    background-image: url(../icons/prev.png);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    float: left;
+  }
+
+  #Next {
+    background-image: url(../icons/next.png);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    float: left;
+  }
+
+  #Last {
+    background-image: url(../icons/last.png);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    float: left;
   }

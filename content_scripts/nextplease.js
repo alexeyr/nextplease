@@ -45,7 +45,9 @@
     }
 
     browser.storage.sync.get(null).then(onOptionsLoaded).catch((e) => {
-        nextplease.logError(e);
+        if (e !== "<unavailable>") {
+            nextplease.logError(e);
+        }
         onOptionsLoaded({});
     });
     // accelKey not available in WebExtensions
@@ -65,21 +67,16 @@
     //     return nextplease.prefs[prefname].toLowerCase().replace(/\+/g, " ").replace(nextplease.accelKey, "accel").replace("ctrl", "control");
     // };
 
+    // TODO common functions, remove duplication
     nextplease.log = function (message) {
-        if (nextplease.DEBUG) {
-            console.log("NextPlease: " + message);
-            //if (nextplease.DEBUG_FILE && nextplease._outputStream) {
-            //    nextplease._outputStream.write(message, message.length);
-            //}
+        if (nextplease.prefs.logLevel > 0) {
+            console.log(message);
         }
     };
 
     nextplease.logDetail = function (message) {
-        if (nextplease.DEBUG_DETAILED) {
-            console.debug("NextPlease: " + message);
-            //if (nextplease.DEBUG_FILE && nextplease._outputStream) {
-            //    nextplease._outputStream.write(message, message.length);
-            //}
+        if (nextplease.prefs.logLevel > 1) {
+            console.debug(message);
         }
     };
 
@@ -108,6 +105,11 @@
                     nextplease.getDirectionString(newDirection)]);
         return window.confirm(replaceConfirmationText);
     };
+
+    function stringArrayFromPref(prefName) {
+        return nextplease.prefs[prefName].split("|").map((x) => x.toLowerCase().replace(/&pipe;/g, "|"));
+    }
+    // TODO common functions end
 
     // // Initialize the lookup table from keycode to keyname
     // nextplease.KeyCodeToNameMap = {};
@@ -240,7 +242,7 @@
         var end = new Date();
         nextplease.logDetail("caching took " + (end.getTime() - start.getTime()) + " ms");
 
-        if (nextplease.DEBUG_DETAILED) {
+        if (nextplease.prefs.logLevel > 1) {
             nextplease.logDetail("checking cache correctness again");
             nextplease.validateCache();
         }
@@ -297,9 +299,6 @@
 
     nextplease.readPreferences = function (retrying) {
         try {
-            nextplease.DEBUG = nextplease.prefs.log;
-            nextplease.DEBUG_DETAILED = nextplease.DEBUG && nextplease.prefs.logDetailed;
-
             // nextplease.logDetail("reading preferences");
 
             // nextplease.initKey("nextpleasekey", "nextkey", "keymodifier");
@@ -354,17 +353,11 @@
             // by reading the preferences or defaults,
             // and put the phrases in a lookup table.
             var addPrefsToMap = function (map, phraseOrImage, direction) {
-                var prefbranch = (direction + phraseOrImage).toLowerCase();
-                var tempprefname = prefbranch + ".expr0";
-                var prefValue = nextplease.prefs[tempprefname];
-                var values = prefValue.split("|");
+                var prefName = (direction + phraseOrImage).toLowerCase() + ".expr0";
+                var values = stringArrayFromPref(prefName);
                 // nextplease.logDetail("initializing " + prefbranch);
                 for (var i = 0; i < values.length; i++) {
-                    var value = values[i].replace(/&pipe;/g, "|");
-                    if (value !== "") {
-                        map[value] = direction;
-                        // nextplease.logDetail("added "+value+" to "+direction+" "+phraseOrImage);
-                    }
+                    map[values[i]] = direction;
                 }
                 // nextplease.logDetail("finished initializing " + prefbranch);
             };
@@ -384,7 +377,7 @@
 
             nextplease.logDetail("preferences read");
         } catch (e) {
-            console.error("Error while reading preferences", e);
+            console.error(e);
             if (!retrying) {
                 nextplease.prefs = {};
                 initDefaultOptions(nextplease.prefs);
@@ -461,15 +454,15 @@
     };
 
     nextplease.directionFromText = function (text, direction, prefetching) {
-        var i;
         if (text) {
+            text = text.toLowerCase();
             var direction1 = nextplease.PhraseMap[text];
             if (direction1) {
                 nextplease.log('found text match for "' + text + '"');
                 return direction1;
             } else {
                 if (prefetching) {
-                    for (i = 0; i < nextplease.directions.length; i++) {
+                    for (let i = 0; i < nextplease.directions.length; i++) {
                         var direction2 = nextplease.directions[i];
                         if (!nextplease.prefetched[direction2] && nextplease.RegExes[direction2].test(text)) {
                             nextplease.log('found regex match for "' + text + '"');
@@ -1188,12 +1181,12 @@
 
     nextplease.addToPrefs = function (prefbranch, text) {
         nextplease.logDetail("adding " + text + " to " + prefbranch);
-        var tempprefname = prefbranch + '.expr0';
-        var prefvalue = nextplease.prefs[tempprefname];
+        var prefname = prefbranch + '.expr0';
+        var prefvalue = nextplease.prefs[prefname];
         var resultprefvalue = prefvalue + "|" + text.replace(/\|/g, "&pipe;");
 
-        nextplease.prefs[tempprefname] = resultprefvalue;
-        browser.storage.sync.set({[tempprefname]: resultprefvalue});
+        nextplease.prefs[prefname] = resultprefvalue;
+        browser.storage.sync.set({[prefname]: resultprefvalue});
     };
 
     nextplease.removeFromPrefs = function (prefbranch, text) {
