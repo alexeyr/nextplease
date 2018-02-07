@@ -1,4 +1,5 @@
 function listenForClicks() {
+    // TODO add page number entry, send {command: [page number]}
     document.addEventListener("click", (e) => {
         browser.tabs.query({active: true, currentWindow: true}).then((tabs) => {
             var active_tab = tabs[0];

@@ -15,12 +15,39 @@
       * Listen for messages from the popup script.
       */
     browser.runtime.onMessage.addListener((message) => {
-        nextplease.openDirection(message.command);
+        if (typeof message.command === "number") {
+            nextplease.openNumberedLink(window, message.command);
+        } else {
+            nextplease.openDirection(message.command);
+        }
     });
 
-    nextplease.prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+    function onOptionsLoaded(options) {
+        nextplease.prefs = options;
+        initDefaultOptions(nextplease.prefs);
+        nextplease.readPreferences(false);
+        // nextplease.clearStatusBar();
 
-    nextplease.prefs = nextplease.prefService.getBranch("nextplease.").QueryInterface(Components.interfaces.nsIPrefBranch2);
+        // // no effect if nextplease.clearStatusBarTimer is invalid
+        // clearTimeout(nextplease.clearStatusBarTimer);
+
+        nextplease.cacheLinkLocations();
+
+        nextplease.prefetched = {};
+        nextplease.unhighlight();
+
+        if (nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Yes) {
+            nextplease.prefetch();
+        } else if ((nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Smart) && nextplease.gotHereUsingNextplease) {
+            nextplease.prefetch();
+            nextplease.gotHereUsingNextplease = false;
+        }
+    }
+
+    browser.storage.sync.get(null).then(onOptionsLoaded).catch((e) => {
+        nextplease.logError(e);
+        onOptionsLoaded({});
+    });
     // accelKey not available in WebExtensions
     // nextplease.accelKeyPrefs = nextplease.prefService.getBranch("ui.key.accelKey").QueryInterface(Components.interfaces.nsIPrefBranch2);
 
@@ -35,7 +62,7 @@
 
     // nextplease.getModifierPref = function (prefname) {
     //     // "ctrl" can come from old versions
-    //     return nextplease.prefs.getCharPref(prefname).toLowerCase().replace(/\+/g, " ").replace(nextplease.accelKey, "accel").replace("ctrl", "control");
+    //     return nextplease.prefs[prefname].toLowerCase().replace(/\+/g, " ").replace(nextplease.accelKey, "accel").replace("ctrl", "control");
     // };
 
     nextplease.log = function (message) {
@@ -94,38 +121,8 @@
     //     nextplease.KeyCodeToNameMap[KeyEvent.DOM_VK_BACK_SPACE] = "DOM_VK_BACK";
     // }());
 
-    window.addEventListener("load", function () { nextplease.init(); }, false);
-    window.addEventListener("popupshowing", function () { nextplease.showHideMenuItems(); }, false);
-    window.addEventListener("load", function (event) { nextplease.loadListener.onLoad(event); }, false);
-
-    nextplease.setUnicharPref = function (aPrefName, aPrefValue) {
-        // nextplease.logDetail("setting " + aPrefName + " to " + aPrefValue);
-        if (nextplease.prefs) {
-            try {
-                var str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
-                str.data = aPrefValue;
-                nextplease.prefs.setComplexValue(aPrefName, Components.interfaces.nsISupportsString, str);
-            } catch (e) {
-                nextplease.logError("Failed to set value of " + aPrefName + " to " + aPrefValue);
-            }
-        } else {
-            nextplease.logError("nextplease.prefs is not defined");
-        }
-    };
-
-    nextplease.getUnicharPref = function (aPrefName) {
-        // nextplease.logDetail("getting " + aPrefName);
-        if (nextplease.prefs) {
-            try {
-                return nextplease.prefs.getComplexValue(aPrefName, Components.interfaces.nsISupportsString).data;
-            } catch (e) {
-                nextplease.logError("Failed to get value for " + aPrefName);
-            }
-        } else {
-            nextplease.logError("nextplease.prefs is not defined");
-        }
-        return "";
-    };
+    // TODO use context menus correctly
+    // window.addEventListener("popupshowing", function () { nextplease.showHideMenuItems(); }, false);
 
     nextplease.gotHereUsingNextplease = false;
 
@@ -146,74 +143,9 @@
 
     nextplease.highlighted_old_styles = {};
 
-    // This code was stolen from brody on the mozillazine.org forums.
-    nextplease.loadListener = {
-        onLoad: function (event) {
-            getBrowser().addEventListener("DOMContentLoaded", function (event) {
-                nextplease.loadListener.onContentLoaded(event);
-            }, true);
-        },
-
-        onContentLoaded: function (event) {
-            var doc = event.originalTarget;
-
-            // When this becomes true it means that 
-            // all of the top level document's 
-            // subframes have also finished loading 
-            if (!this.isTopLevelDocument(doc)) { return; }
-
-            // Log/alert 
-            if (nextplease.DEBUG_DETAILED) {
-                nextplease.logDetail("loadListener\n" + "DOMContentLoaded\n" + doc.title + "\n" + doc.documentURI);
-            }
-
-            nextplease.clearStatusBar();
-
-            // no effect if nextplease.clearStatusBarTimer is invalid
-            clearTimeout(nextplease.clearStatusBarTimer);
-
-            nextplease.cacheLinkLocations();
-
-            nextplease.prefetched = {};
-            nextplease.unhighlight();
-
-            if (nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Yes) {
-                nextplease.prefetch();
-            } else if ((nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Smart) && nextplease.gotHereUsingNextplease) {
-                nextplease.prefetch();
-                nextplease.gotHereUsingNextplease = false;
-            }
-        },
-
-        isTopLevelDocument: function (aDocument) {
-            return (aDocument === aDocument.defaultView.top.document);
-        }
-    };
-
-    nextplease.prefObserver = {
-        QueryInterface: function QueryInterface(aIID) {
-            if (aIID.equals(Components.interfaces.nsIObserver) ||
-                aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
-                aIID.equals(Components.interfaces.nsISupports)) {
-                return this;
-            } else {
-                throw Components.results.NS_NOINTERFACE;
-            }
-        },
-
-        register: function () {
-            nextplease.prefs.addObserver("", this, true);
-            // nextplease.accelKeyPrefs.addObserver("", this, true);
-        },
-
-        observe: function (subject, topic, data) {
-            if (topic === "nsPref:changed") {
-                nextplease.readPreferences();
-            }
-        }
-    };
-
-    nextplease.prefObserver.register();
+    browser.storage.onChanged.addListener((changes, areaName) => {
+        nextplease.readPreferences(false);
+    });
 
     nextplease.validateCache = function () {
         var i, url, urlsCache = nextplease.urlsCache, cachedURLsNum = urlsCache.size;
@@ -226,19 +158,16 @@
                 if (!url) {
                     message = messageLines.join("\n\n");
                     nextplease.logError(message);
-                    alert(message);
                     return;
                 }
             }
             if (url !== urlsCache.last) {
                 message = messageLines.join("\n\n");
                 nextplease.logError(message);
-                alert(message);
                 return;
             }
         } else if (urlsCache.first || urlsCache.last) {
             message = messageLines[0];
-            alert(message);
             nextplease.logError(message);
         }
     };
@@ -278,8 +207,8 @@
         nextplease.logDetail("caching image location");
         nextplease.logDetail("there are currently " + urlsCache.size + " image URLs cached");
 
-        var theDocument = window.content.document;
-        nextplease.currentHostName = theDocument.location.host;
+        var theDocument = window.document;
+        nextplease.currentHostName = window.location.host;
 
         var start = new Date();
 
@@ -366,16 +295,10 @@
     //     }
     // };
 
-    nextplease.readPreferences = function () {
-        var i;
-        if (!nextplease.prefs) {
-            nextplease.logError("nextplease.prefs undefined. This shouldn't happen!");
-            nextplease.prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("nextplease.");
-        }
-
+    nextplease.readPreferences = function (retrying) {
         try {
-            nextplease.DEBUG = nextplease.prefs.getBoolPref("log");
-            nextplease.DEBUG_DETAILED = nextplease.DEBUG && nextplease.prefs.getBoolPref("log.detailed");
+            nextplease.DEBUG = nextplease.prefs.log;
+            nextplease.DEBUG_DETAILED = nextplease.DEBUG && nextplease.prefs.logDetailed;
 
             // nextplease.logDetail("reading preferences");
 
@@ -386,27 +309,27 @@
 
             // nextplease.logDetail("keys read");
 
-            nextplease.useSubmit = nextplease.prefs.getBoolPref("allowsubmit");
-            // nextplease.useNumberShortcuts = nextplease.prefs.getBoolPref("allownumbershortcuts");
-            nextplease.useContextMenu = nextplease.prefs.getBoolPref("allowcontextmenu");
-            nextplease.useSmartNext = nextplease.prefs.getBoolPref("allowsmartnext");
-            nextplease.prefetchPref = nextplease.prefs.getIntPref("prefetch");
-            nextplease.useFrames = nextplease.prefs.getBoolPref("checkframes");
+            nextplease.useSubmit = nextplease.prefs.allowsubmit;
+            // nextplease.useNumberShortcuts = nextplease.prefs.allownumbershortcuts;
+            nextplease.useContextMenu = nextplease.prefs.allowcontextmenu;
+            nextplease.useSmartNext = nextplease.prefs.allowsmartnext;
+            nextplease.prefetchPref = nextplease.prefs.prefetch;
+            nextplease.useFrames = nextplease.prefs.checkframes;
 
             // nextplease.logDetail("bools read");
 
-            var nextRegExString = nextplease.getUnicharPref("nextregex");
-            var prevRegExString = nextplease.getUnicharPref("prevregex");
-            var firstRegExString = nextplease.getUnicharPref("firstregex");
-            var lastRegExString = nextplease.getUnicharPref("lastregex");
+            var nextRegExString = nextplease.prefs.nextregex;
+            var prevRegExString = nextplease.prefs.prevregex;
+            var firstRegExString = nextplease.prefs.firstregex;
+            var lastRegExString = nextplease.prefs.lastregex;
 
-            var galleryRegExString = nextplease.getUnicharPref("galleryregex");
+            var galleryRegExString = nextplease.prefs.galleryregex;
             var galleryRegEx = new RegExp(galleryRegExString, "i");
             var matches = galleryRegEx.exec("http://nextplease.mozdev.org/test/test101.jpg");
-            if (matches && (matches.length !== 4)) {
+            if (!matches || (matches.length !== 4)) {
                 nextplease.logError("Gallery regex test failed!");
-                nextplease.prefs.clearUserPref("galleryregex");
-                galleryRegExString = nextplease.getUnicharPref("galleryregex");
+                // TODO get default nextplease.prefs.clearUserPref("galleryregex");
+                galleryRegExString = nextplease.prefs.galleryregex;
                 galleryRegEx = new RegExp(galleryRegExString, "i");
             }
 
@@ -422,7 +345,7 @@
 
             // nextplease.logDetail("gallery regex read");
 
-            nextplease.initNumberKeys();
+            // nextplease.initNumberKeys();
 
             nextplease.ImageMap = {};
             nextplease.PhraseMap = {};
@@ -433,11 +356,10 @@
             var addPrefsToMap = function (map, phraseOrImage, direction) {
                 var prefbranch = (direction + phraseOrImage).toLowerCase();
                 var tempprefname = prefbranch + ".expr0";
-                var prefValue = nextplease.getUnicharPref(tempprefname);
+                var prefValue = nextplease.prefs[tempprefname];
                 var values = prefValue.split("|");
-                var i;
                 // nextplease.logDetail("initializing " + prefbranch);
-                for (i = 0; i < values.length; i++) {
+                for (var i = 0; i < values.length; i++) {
                     var value = values[i].replace(/&pipe;/g, "|");
                     if (value !== "") {
                         map[value] = direction;
@@ -447,32 +369,28 @@
                 // nextplease.logDetail("finished initializing " + prefbranch);
             };
 
-            for (i = 0; i < nextplease.directions.length; i++) {
+            for (var i = 0; i < nextplease.directions.length; i++) {
                 var direction = nextplease.directions[i];
                 addPrefsToMap(nextplease.PhraseMap, "Phrase", direction);
                 addPrefsToMap(nextplease.ImageMap, "Image", direction);
             }
 
-            nextplease.highlightColor = nextplease.prefs.getBoolPref("highlight") ?
-                nextplease.prefs.getCharPref("highlight.color") :
+            nextplease.highlightColor = nextplease.prefs.highlight ?
+                nextplease.prefs.highlightColor :
                 undefined;
-            nextplease.highlightPrefetchedColor = nextplease.prefs.getBoolPref("highlight.prefetched") ?
-                nextplease.prefs.getCharPref("highlight.prefetched.color") :
+            nextplease.highlightPrefetchedColor = nextplease.prefs.highlightPrefetched ?
+                nextplease.prefs.highlightPrefetchedColor :
                 undefined;
 
             nextplease.logDetail("preferences read");
         } catch (e) {
-            if (!nextplease.retryingToReadPreferences) {
-                // nextplease.prefs.resetBranch() isn't implemented according to MDC
-                var prefnames = nextplease.prefs.getChildList("", {});
-                for (i = 0; i < prefnames.length; i++) {
-                    nextplease.prefs.clearUserPref(prefnames[i]);
-                }
+            console.error("Error while reading preferences", e);
+            if (!retrying) {
+                nextplease.prefs = {};
+                initDefaultOptions(nextplease.prefs);
 
-                var errorMsg = browser.i18n.getMessage("readingPreferencesFailed");
-                alert(errorMsg);
-                nextplease.retryingToReadPreferences = true;
-                nextplease.readPreferences();
+                nextplease.notify("readingPreferencesFailed");
+                nextplease.readPreferences(true);
             }
         }
     };
@@ -508,31 +426,17 @@
     //     }
     // };
 
-    nextplease.init = function () {
-        nextplease.log("initializing");
-        nextplease.retryingToReadPreferences = false;
-        nextplease.readPreferences();
-        nextplease.statusBar = document.getElementById("nextplease_statusbar_panel");
-    };
-
-    nextplease.clearStatusBar = function () {
-        if (nextplease.statusBar) {
-            nextplease.statusBar.collapsed = true;
-            nextplease.statusBar.label = "";
-        }
-    };
-
-    nextplease.showInStatusBar = function (text) {
-        if (nextplease.statusBar) {
-            nextplease.statusBar.collapsed = false;
-            nextplease.statusBar.label = text;
-        }
+    nextplease.notify = function (messageKey, args = undefined, title = undefined) {
+        let localizedTitle = title ? browser.i18n.getMessage(title) : "";
+        browser.notifications.create({
+            type: "basic",
+            title: localizedTitle,
+            message: browser.i18n.getMessage(messageKey, args || [])
+        });
     };
 
     nextplease.notifyLinkNotFound = function () {
-        nextplease.showInStatusBar(browser.i18n.getMessage("linkNotFound"));
-
-        nextplease.clearStatusBarTimer = setTimeout(nextplease.clearStatusBar, 5000);
+        nextplease.notify("linkNotFound");
     };
 
     nextplease.directionFromRel = function (link) {
@@ -732,7 +636,7 @@
             if (imgElems.length > 0) {
                 nextplease.logDetail("checking images inside <a>...</a>");
                 // If the image matches, go to the URL.
-                //alert(imgElems[0].src);
+                //nextplease.logDetail(imgElems[0].src);
                 direction1 = nextplease.directionFromImage(imgElems[0], direction, prefetching);
                 if (direction === direction1) {
                     return [nextplease.ResultType.Link, link];
@@ -751,7 +655,7 @@
                 // and doesn't follow smaller numbers
                 // it probably doesn't have anything to do with
                 // a next/prev link.
-                //    alert(linkPageNum);
+                //    nextplease.logDetail(linkPageNum);
                 if (insideNumberBlock || (linkPageNum < nextplease.MAX_LINK_NUM)) {
                     nextplease.logDetail("found link number " + linkPageNum + ", checking...");
                     // Try to figure out what the current page and
@@ -957,7 +861,8 @@
         // only check forms, but I'm getting problems
         // with them. I'm not sure if it's only on
         // malformed HTML pages, or if it's a Firefox bug.
-        var inputs = window.content.document.getElementsByTagName("input"), inputsNum = inputs.length;
+        var inputs = document.getElementsByTagName("input");
+        var inputsNum = inputs.length;
 
         for (i = 0; i < inputsNum; i++) {
             var input = inputs[i];
@@ -971,7 +876,8 @@
             }
         }
 
-        var buttons = window.content.document.getElementsByTagName("button"), buttonsNum = buttons.length;
+        var buttons = document.getElementsByTagName("button");
+        var buttonsNum = buttons.length;
         var range = document.createRange();
 
         for (i = 0; i < buttonsNum; i++) {
@@ -1088,9 +994,9 @@
     };
 
     nextplease.openDirection = function (direction) {
-        var result = nextplease.prefetched[direction] || nextplease.getLink(window.content, direction);
+        var result = nextplease.prefetched[direction] || nextplease.getLink(window, direction);
         if (result) {
-            return nextplease.openResult(window.content, result);
+            return nextplease.openResult(window, result);
         } else {
             nextplease.notifyLinkNotFound();
             return false;
@@ -1118,7 +1024,7 @@
     };
 
     nextplease.prefetch = function () {
-        nextplease.getLink(window.content, "Prefetch");
+        nextplease.getLink(window, "Prefetch");
         if (nextplease.highlightPrefetchedColor) {
             nextplease.highlight(nextplease.prefetched.Next, nextplease.highlightPrefetchedColor);
             nextplease.highlight(nextplease.prefetched.Prev, nextplease.highlightPrefetchedColor);
@@ -1283,22 +1189,25 @@
     nextplease.addToPrefs = function (prefbranch, text) {
         nextplease.logDetail("adding " + text + " to " + prefbranch);
         var tempprefname = prefbranch + '.expr0';
-        var prefvalue = nextplease.getUnicharPref(tempprefname);
+        var prefvalue = nextplease.prefs[tempprefname];
         var resultprefvalue = prefvalue + "|" + text.replace(/\|/g, "&pipe;");
 
-        nextplease.setUnicharPref(tempprefname, resultprefvalue);
+        nextplease.prefs[tempprefname] = resultprefvalue;
+        browser.storage.sync.set({[tempprefname]: resultprefvalue});
     };
 
     nextplease.removeFromPrefs = function (prefbranch, text) {
         nextplease.logDetail("removing " + text + " from " + prefbranch);
         var tempprefname = prefbranch + '.expr0';
-        var prefvalue = nextplease.getUnicharPref(tempprefname);
+        var prefvalue = nextplease.prefs[tempprefname];
         var text1 = new RegExp("\\|" + text.replace(/\|/g, "&pipe;") + "(?=\\||$)", "g");
         var resultprefvalue = prefvalue.replace(text1, "");
 
-        nextplease.setUnicharPref(tempprefname, resultprefvalue);
+        nextplease.prefs[tempprefname] = resultprefvalue;
+        browser.storage.sync.set({[tempprefname]: resultprefvalue});
     };
 
+    // TODO add way to enter number in the popup and react here
     nextplease.linkNumber = 0;
 
     nextplease.handleNumberShortcut = function (digit) {
@@ -1307,14 +1216,15 @@
 
         nextplease.linkNumber = nextplease.linkNumber * 10 + digit;
 
-        nextplease.showInStatusBar(
-            browser.i18n.getMessage("lookingForNumberedLink", [nextplease.linkNumber]));
+        // TODO show notification?
+        // nextplease.showInStatusBar(
+        //     browser.i18n.getMessage("lookingForNumberedLink", [nextplease.linkNumber]));
 
         nextplease.NumberShortcutTimer = setTimeout(nextplease.finishNumberShortcut, 500);
     };
 
     nextplease.finishNumberShortcut = function () {
-        nextplease.openNumberedLink(window.content, nextplease.linkNumber);
+        nextplease.openNumberedLink(window, nextplease.linkNumber);
         nextplease.linkNumber = 0;
         clearTimeout(nextplease.NumberShortcutTimer);
     };

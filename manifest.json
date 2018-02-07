@@ -2,6 +2,11 @@
     "manifest_version": 2,
     "name": "__MSG_extensionName__",
     "version": "0.10.0",
+    "applications": {
+        "gecko": {
+            "id": "{57B65ABB-F4E3-4358-8472-15AEE0833E11}"
+        }
+    },
 
     "description": "__MSG_extensionDescription__",
 
@@ -53,7 +58,8 @@
 
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "notifications"
     ],
 
     "background": {
@@ -63,7 +69,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["content_scripts/nextplease.js"]
+            "js": ["options/default_options.js", "content_scripts/nextplease.js"]
         }
     ]
 }

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="options.css" />
+</head>
+
+<body>
+
+    <form>
+        <!-- TODO Options UI -->
+        <!-- <div class="tab">
+            <input id="tab-one" type="checkbox" name="tabs">
+            <label for="tab-one">Label One</label>
+            <div class="tab-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum,
+                    maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci
+                    eum? Saepe, itaque.</p>
+            </div>
+
+        </div>
+        <div class="tab">
+            <input id="tab-two" type="checkbox" name="tabs">
+            <label for="tab-two">Label Two</label>
+            <div class="tab-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum,
+                    maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci
+                    eum? Saepe, itaque.</p>
+            </div>
+        </div>
+        <div class="tab">
+            <input id="tab-three" type="checkbox" name="tabs">
+            <label for="tab-three">Label Three</label>
+            <div class="tab-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum,
+                    maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci
+                    eum? Saepe, itaque.</p>
+            </div>
+        </div>
+        </div> -->
+
+
+        <!-- 
+
+        <prefpane id="nextplease.phrases" label="&options.phrases.title;" image="chrome://nextplease/skin/Document.png" onpaneload="nextplease.initListboxesFromTextboxes('phrases');">
+            <preferences>
+                <preference id="nextphrases" name="nextplease.nextphrase.expr0" type="unichar" />
+                <preference id="prevphrases" name="nextplease.prevphrase.expr0" type="unichar" />
+                <preference id="firstphrases" name="nextplease.firstphrase.expr0" type="unichar" />
+                <preference id="lastphrases" name="nextplease.lastphrase.expr0" type="unichar" />
+            </preferences>
+            <hbox flex="1">
+                <listbox width="80" onselect="nextplease.selectedPanelChanged(this);">
+                    <listitem label="&options.next;" selected="true" />
+                    <listitem label="&options.prev;" />
+                    <listitem label="&options.first;" />
+                    <listitem label="&options.last;" />
+                </listbox>
+                <separator class="groove" orient="vertical" style="opacity: 0.5; margin-top: 5px; margin-bottom: 5px;" />
+                <vbox flex="1">
+                    <deck flex="1">
+                        <listbox id="Next_Phrase_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                        <listbox id="Prev_Phrase_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                        <listbox id="First_Phrase_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);"
+                            onselect="nextplease.enableDisableRemoveButton(this);" onchange="nextplease.syncListboxToPref(this);"
+                        />
+                        <listbox id="Last_Phrase_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                    </deck>
+                    <hbox id="phrases_dummy_texts" collapsed="true">
+                        <textbox id="Next_Phrase_dummy_text" preference="nextphrases" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="Prev_Phrase_dummy_text" preference="prevphrases" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="First_Phrase_dummy_text" preference="firstphrases" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="Last_Phrase_dummy_text" preference="lastphrases" onchange="nextplease.syncPrefToListbox(this);" />
+                    </hbox>
+                    <separator class="thin" />
+                    <hbox align="stretch">
+                        <textbox type="text" maxlength="256" onkeypress="nextplease.addOnReturn(event, this);" />
+                        <button label="&options.add;" style="margin-left: 0" oncommand="nextplease.addToListbox(this);" />
+                        <spacer flex="1" minwidth="15" />
+                        <button label="&options.remove;" tooltiptext="&options.removeSelected;" disabled="true" style="margin-right: 2px" oncommand="nextplease.removeSelectedFromListbox(this);"
+                        />
+                        <spacer flex="1" minwidth="40" />
+                        <button label="&options.restoreDefault;" oncommand="nextplease.restoreDefaultListbox(this);" />
+                    </hbox>
+                </vbox>
+            </hbox>
+        </prefpane>
+
+        <prefpane id="nextplease.images" label="&options.images.title;" image="chrome://nextplease/skin/Image.png" onpaneload="nextplease.initListboxesFromTextboxes('images');">
+            <preferences>
+                <preference id="nextimages" name="nextplease.nextimage.expr0" type="unichar" />
+                <preference id="previmages" name="nextplease.previmage.expr0" type="unichar" />
+                <preference id="firstimages" name="nextplease.firstimage.expr0" type="unichar" />
+                <preference id="lastimages" name="nextplease.lastimage.expr0" type="unichar" />
+            </preferences>
+            <hbox flex="1">
+                <listbox width="80" onselect="nextplease.selectedPanelChanged(this);">
+                    <listitem label="&options.next;" selected="true" />
+                    <listitem label="&options.prev;" />
+                    <listitem label="&options.first;" />
+                    <listitem label="&options.last;" />
+                </listbox>
+                <separator class="groove" orient="vertical" style="opacity: 0.5; margin-top: 5px; margin-bottom: 5px;" />
+                <vbox flex="1">
+                    <deck flex="1">
+                        <listbox id="Next_Image_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                        <listbox id="Prev_Image_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                        <listbox id="First_Image_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                        <listbox id="Last_Image_list" seltype="multiple" flex="1" onkeypress="nextplease.removeSelectedOnDelete(event, this);" onselect="nextplease.enableDisableRemoveButton(this);"
+                            onchange="nextplease.syncListboxToPref(this);" />
+                    </deck>
+                    <hbox id="images_dummy_texts" collapsed="true">
+                        <textbox id="Next_Image_dummy_text" preference="nextimages" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="Prev_Image_dummy_text" preference="previmages" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="First_Image_dummy_text" preference="firstimages" onchange="nextplease.syncPrefToListbox(this);" />
+                        <textbox id="Last_Image_dummy_text" preference="lastimages" onchange="nextplease.syncPrefToListbox(this);" />
+                    </hbox>
+                    <separator class="thin" />
+                    <hbox align="stretch">
+                        <textbox type="text" maxlength="256" onkeypress="nextplease.addOnReturn(event, this);" />
+                        <button label="&options.add;" style="margin-left: 0" oncommand="nextplease.addToListbox(this);" />
+                        <spacer flex="1" minwidth="15" />
+                        <button label="&options.removeSelected;" disabled="true" style="margin-right: 2px" oncommand="nextplease.removeSelectedFromListbox(this);"
+                        />
+                        <spacer flex="1" minwidth="40" />
+                        <button label="&options.restoreDefault;" oncommand="nextplease.restoreDefaultListbox(this);" />
+                    </hbox>
+                </vbox>
+            </hbox>
+        </prefpane>
+
+        <prefpane id="nextplease.advanced" label="&options.advanced.title;" image="chrome://nextplease/skin/Filter List.png">
+            <preferences>
+                <preference id="nextregex" name="nextplease.nextregex" type="unichar" />
+                <preference id="prevregex" name="nextplease.prevregex" type="unichar" />
+                <preference id="firstregex" name="nextplease.firstregex" type="unichar" />
+                <preference id="lastregex" name="nextplease.lastregex" type="unichar" />
+                <preference id="galleryregex" name="nextplease.galleryregex" type="unichar" />
+            </preferences>
+            <vbox>
+                <description width="200" class="warning">&options.advanced.warning;</description>
+                <grid>
+                    <columns>
+                        <column/>
+                        <column/>
+                        <column/>
+                    </columns>
+                    <rows>
+                        <row align="center" flex="1">
+                            <label value="&options.next;:" />
+                            <textbox id="nextregex_textbox" type="text" size="40" maxlength="2048" preference="nextregex" />
+                            <button id="nextregex_default_button" class="dialog" label="&options.restoreDefault;" oncommand="document.getElementById('nextregex').reset(); return false;"
+                            />
+                        </row>
+                        <row align="center" flex="1">
+                            <label value="&options.prev;:" />
+                            <textbox id="prevregex_textbox" type="text" size="40" maxlength="2048" preference="prevregex" />
+                            <button id="prevRegExDefaultButton" class="dialog" label="&options.restoreDefault;" oncommand="document.getElementById('prevregex').reset(); return false;"
+                            />
+                        </row>
+                        <row align="center" flex="1">
+                            <label value="&options.first;:" />
+                            <textbox id="firstregex_textbox" type="text" size="40" maxlength="2048" preference="firstregex" />
+                            <button id="firstRegExDefaultButton" class="dialog" label="&options.restoreDefault;" oncommand="document.getElementById('firstregex').reset(); return false;"
+                            />
+                        </row>
+                        <row align="center" flex="1">
+                            <label value="&options.last;:" />
+                            <textbox id="lastregex_textbox" type="text" size="40" maxlength="2048" preference="lastregex" />
+                            <button id="lastRegExDefaultButton" class="dialog" label="&options.restoreDefault;" oncommand="document.getElementById('lastregex').reset(); return false;"
+                            />
+                        </row>
+                        <row align="center" flex="1">
+                            <label value="&options.advanced.gallery;" />
+                            <textbox id="galleryregex_textbox" type="text" size="40" maxlength="2048" preference="galleryregex" />
+                            <button id="galleryRegExDefaultButton" class="dialog" label="&options.restoreDefault;" oncommand="document.getElementById('galleryregex').reset(); return false;"
+                            />
+                        </row>
+                    </rows>
+                </grid>
+            </vbox>
+        </prefpane>
+
+        <prefpane id="nextplease.debug" label="&options.debug.title;" image="chrome://nextplease/skin/Settings.png" onpaneload="nextplease.enableDisableHighlightDebugControls();">
+            <preferences>
+                <preference id="log" name="nextplease.log" type="bool" />
+                <preference id="log.detailed" name="nextplease.log.detailed" type="bool" />
+                <preference id="log.file" name="nextplease.log.file" type="bool" />
+                <preference id="highlight" name="nextplease.highlight" type="bool" />
+                <preference id="highlight.color" name="nextplease.highlight.color" type="string" />
+                <preference id="highlight.prefetched" name="nextplease.highlight.prefetched" type="bool" />
+                <preference id="highlight.prefetched.color" name="nextplease.highlight.prefetched.color" type="string" />
+            </preferences>
+            <vbox flex="1">
+                <checkbox id="logCheck" label="&options.log.normal;" preference="log" />
+                <checkbox id="logDetailedCheck" label="&options.log.detailed;" preference="log.detailed" />
+                <separator/>
+                <hbox>
+                    <checkbox id="highlightCheck" label="&options.highlight;" preference="highlight" />
+                    <colorpicker id="highlightColor" type="button" preference="highlight.color" />
+                </hbox>
+                <hbox>
+                    <checkbox id="highlightPrefetchedCheck" label="&options.highlight.prefetched;" preference="highlight.prefetched" />
+                    <colorpicker id="highlightPrefetchedColor" type="button" preference="highlight.prefetched.color" />
+                </hbox>
+            </vbox>
+        </prefpane> 
+    -->
+    </form>
+
+    <script src="../translate.js"></script>
+    <script src="default_options.js"></script>
+    <script src="options.js"></script>
+
+</body>
+
+</html>
