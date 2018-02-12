@@ -7,7 +7,7 @@
             var active_tab = tabs[0];
 
             browser.tabs.sendMessage(active_tab.id, {
-                command: e.target.id
+                command: direction
             });
         }).catch(reportExecuteScriptError);
     });
