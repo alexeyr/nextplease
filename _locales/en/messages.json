@@ -93,7 +93,10 @@
         "message": "Text patterns"
     },
     "optionsRegex": {
-        "message": "RegExp:"
+        "message": "Regex:"
+    },
+    "optionsGalleryRegex": {
+        "message": "Page/image number regex:"
     },
     "optionsRegexSyntax": {
         "message": "JavaScript regex documentation"

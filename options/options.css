@@ -1,6 +1,9 @@
 input, label, select, button {
   vertical-align: middle;
 }
+.vertical-center {
+  vertical-align: middle;
+}
 .no-scroll {
   overflow: hidden;
 }

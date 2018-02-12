@@ -198,6 +198,12 @@
             }
         });
 
+        $("#galleryRegex").change(function () {
+            if (this.checkValidity()) {
+                setPref(this.pref, this.value);
+            }
+        });
+
         function setPref(key, value) {
             console.log(`${key} := ${value}`); // comment out later
             nextplease.prefs[key] = value;
@@ -219,6 +225,10 @@
             });
 
             prefSelects.each(function () {
+                this.value = nextplease.prefs[this.pref];
+            });
+
+            $("#galleryRegex").each(function () {
                 this.value = nextplease.prefs[this.pref];
             });
 
