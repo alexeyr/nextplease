@@ -50,22 +50,6 @@
         }
         onOptionsLoaded({});
     });
-    // accelKey not available in WebExtensions
-    // nextplease.accelKeyPrefs = nextplease.prefService.getBranch("ui.key.accelKey").QueryInterface(Components.interfaces.nsIPrefBranch2);
-
-    // nextplease.isMac = /Mac/i.test(window.navigator.platform);
-
-    // switch (nextplease.accelKeyPrefs.getIntPref("")) {
-    //     case KeyEvent.DOM_VK_ALT: nextplease.accelKey = "alt"; break;
-    //     case KeyEvent.DOM_VK_CONTROL: nextplease.accelKey = "control"; break;
-    //     case KeyEvent.DOM_VK_META: nextplease.accelKey = "meta"; break;
-    //     default: nextplease.accelKey = (nextplease.isMac ? "meta" : "control");
-    // }
-
-    // nextplease.getModifierPref = function (prefname) {
-    //     // "ctrl" can come from old versions
-    //     return nextplease.prefs[prefname].toLowerCase().replace(/\+/g, " ").replace(nextplease.accelKey, "accel").replace("ctrl", "control");
-    // };
 
     // TODO common functions, remove duplication
     nextplease.log = function (message) {
@@ -110,18 +94,6 @@
         return nextplease.prefs[prefName].split("|").map((x) => x.toLowerCase().replace(/&pipe;/g, "|"));
     }
     // TODO common functions end
-
-    // // Initialize the lookup table from keycode to keyname
-    // nextplease.KeyCodeToNameMap = {};
-
-    // (function () {
-    //     var constName;
-
-    //     for (constName in KeyEvent) {
-    //         nextplease.KeyCodeToNameMap[KeyEvent[constName]] = constName.replace("DOM_", "");
-    //     }
-    //     nextplease.KeyCodeToNameMap[KeyEvent.DOM_VK_BACK_SPACE] = "DOM_VK_BACK";
-    // }());
 
     // TODO use context menus correctly
     // window.addEventListener("popupshowing", function () { nextplease.showHideMenuItems(); }, false);
@@ -252,70 +224,15 @@
         // nextplease.logDetail(nextplease.imageLocationArray.toString());
     };
 
-    // nextplease.initKey = function (keyId, keyPrefName, modifierPrefName) {
-    //     var modString = nextplease.getModifierPref(modifierPrefName);
-    //     var keyOrCharCode = nextplease.prefs.getIntPref(keyPrefName);
-    //     if (keyOrCharCode === 0) {
-    //         nextplease.prefs.clearUserPref(keyPrefName);
-    //         keyOrCharCode = nextplease.prefs.getIntPref(keyPrefName);
-    //     }
-    //     var isKeyCodePrefName = "iskeycode." + keyPrefName;
-    //     var isKeyCode = nextplease.prefs.getBoolPref(isKeyCodePrefName);
-    //     var enablePrefName = "enable." + keyPrefName;
-    //     var enable = nextplease.prefs.getBoolPref(enablePrefName);
-    //     var keyString;
-
-    //     var keyElem = document.getElementById(keyId);
-    //     keyElem.setAttribute("modifiers", modString);
-
-    //     if (isKeyCode) {
-    //         keyString = nextplease.KeyCodeToNameMap[keyOrCharCode];
-    //         keyElem.removeAttribute("key");
-    //         keyElem.setAttribute("keycode", keyString);
-    //     } else {
-    //         keyString = String.fromCharCode(keyOrCharCode);
-    //         keyElem.setAttribute("key", keyString);
-    //         keyElem.removeAttribute("keycode");
-    //     }
-    //     keyElem.setAttribute("disabled", !enable);
-
-    //     if (enable) {
-    //         nextplease.DisableKey(modString, keyString);
-    //     }
-    // };
-
-    // nextplease.initNumberKeys = function () {
-    //     var modifier = nextplease.getModifierPref("numbermodifier");
-    //     var numberKey, i;
-    //     for (i = 0; i < 10; i++) {
-    //         numberKey = document.getElementById("nextplease" + i + "key");
-    //         numberKey.setAttribute("modifiers", modifier);
-    //         numberKey.setAttribute("disabled", !nextplease.useNumberShortcuts);
-    //         if (nextplease.useNumberShortcuts) {
-    //             nextplease.DisableKey(modifier, "" + i);
-    //         }
-    //     }
-    // };
-
     nextplease.readPreferences = function (retrying) {
         try {
             // nextplease.logDetail("reading preferences");
 
-            // nextplease.initKey("nextpleasekey", "nextkey", "keymodifier");
-            // nextplease.initKey("nextpleaseprevkey", "prevkey", "prevkeymodifier");
-            // nextplease.initKey("nextpleasefirstkey", "firstkey", "firstkeymodifier");
-            // nextplease.initKey("nextpleaselastkey", "lastkey", "lastkeymodifier");
-
-            // nextplease.logDetail("keys read");
-
             nextplease.useSubmit = nextplease.prefs.allowsubmit;
-            // nextplease.useNumberShortcuts = nextplease.prefs.allownumbershortcuts;
             nextplease.useContextMenu = nextplease.prefs.allowcontextmenu;
             nextplease.useSmartNext = nextplease.prefs.allowsmartnext;
             nextplease.prefetchPref = nextplease.prefs.prefetch;
             nextplease.useFrames = nextplease.prefs.checkframes;
-
-            // nextplease.logDetail("bools read");
 
             var nextRegExString = nextplease.prefs.nextregex;
             var prevRegExString = nextplease.prefs.prevregex;
@@ -341,10 +258,6 @@
             };
 
             // nextplease.logDetail("regexes read");
-
-            // nextplease.logDetail("gallery regex read");
-
-            // nextplease.initNumberKeys();
 
             nextplease.ImageMap = {};
             nextplease.PhraseMap = {};
@@ -387,37 +300,6 @@
             }
         }
     };
-
-    // nextplease.DisableKey = function (modifier, keyString) {
-    //     var conflictingKeys, conflictingKey, conflictingId, conflictingModifier, i;
-    //     if (keyString.indexOf("VK_") >= 0) {
-    //         // nextplease.logDetail("disabling keys conflicting with " + modifier + "+" + nextplease.KeyCodeToNameMap[keycode]);
-    //         conflictingKeys = document.getElementsByAttribute("keycode", keyString);
-    //     } else {
-    //         // nextplease.logDetail("disabling keys conflicting with " + modifier + "+" + key);
-    //         conflictingKeys = document.getElementsByAttribute("key", keyString.toLowerCase());
-    //     }
-
-    //     var conflictingKeysLength = conflictingKeys.length;
-    //     // nextplease.logDetail(conflictingKeysLength + " keys conflicting with " + modifier + "+" keystring);
-    //     for (i = 0; i < conflictingKeysLength; i++) {
-    //         conflictingKey = conflictingKeys[i];
-    //         conflictingId = conflictingKey.getAttribute("id");
-    //         if (!(/nextplease/.test(conflictingId)) && conflictingKey.hasAttribute("modifiers")) {
-    //             conflictingModifier = conflictingKey.getAttribute("modifiers").replace(nextplease.accelKey, "accel");
-    //             // nextplease.logDetail("potentially conflicting key: " + conflictingId);
-    //             if ((/alt/.test(modifier) === /alt/.test(conflictingModifier)) &&
-    //                 (/control/.test(modifier) === /control/.test(conflictingModifier)) &&
-    //                 (/meta/.test(modifier) === /meta/.test(conflictingModifier)) &&
-    //                 (/shift/.test(modifier) === /shift/.test(conflictingModifier)) &&
-    //                 (/accel/.test(modifier) === /accel/.test(conflictingModifier))) {
-    //                 // conflictingKey.parentNode.removeChild(conflictingKey);
-    //                 conflictingKey.setAttribute("disabled", true);
-    //                 nextplease.log("Disabled conflicting key " + conflictingId);
-    //             }
-    //         }
-    //     }
-    // };
 
     nextplease.notify = function (messageKey, args = undefined, title = undefined) {
         let localizedTitle = title ? browser.i18n.getMessage(title) : "";

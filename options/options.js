@@ -262,5 +262,13 @@
         browser.storage.sync.get(null).then(setFromStored, onError);
     }
 
+    ShortcutCustomizeUI.build().then(list => {
+        let shortcutsDiv = document.getElementById('shortcuts');
+        let message = browser.i18n.getMessage("optionsKeyShortcuts") + 
+            (ShortcutCustomizeUI.available ? "" : ` ${browser.i18n.getMessage("optionsKeyShortcutsUnavailable")}`);
+        shortcutsDiv.insertAdjacentHTML("afterbegin", `<label>${message}</label>`);
+        shortcutsDiv.appendChild(list);
+    });
+
     $(loadOptions);
 })();

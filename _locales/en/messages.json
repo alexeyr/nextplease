@@ -73,9 +73,6 @@
     "lookingForNumberedLink": {
         "message": "looking for link numbered $1"
     },
-    "badKeyCombination": {
-        "message": "Illegal key combination"
-    },
     "readingPreferencesFailed": {
         "message": "There was a problem while reading preferences for NextPlease. They have been reset to default values. Go to Options dialog if you wish to change them.",
         "description": "Message shown when reading options fails."
@@ -140,26 +137,11 @@
     "optionsSmartPrefetch": {
         "message": "on pages visited using NextPlease"
     },
-    "optionsKeyBindings": {
-        "message": "Key Bindings"
+    "optionsKeyShortcuts": {
+        "message": "Keyboard shortcuts"
     },
-    "optionsKeyBindingsChangeWarning": {
-        "message": "Changes to key binding will only take effect in new windows or after restarting Firefox"
-    },
-    "optionsPressShortcut": {
-        "message": "To change a shortcut, focus on the textbox and press the desired key combination"
-    },
-    "optionsNextKey": {
-        "message": "Next Key:"
-    },
-    "optionsPrevKey": {
-        "message": "Prev Key:"
-    },
-    "optionsFirstKey": {
-        "message": "First Key:"
-    },
-    "optionsLastKey": {
-        "message": "Last Key:"
+    "optionsKeyShortcutsUnavailable": {
+        "message": "(can't be changed in this browser version)"
     },
     "nextUpperCase": {
         "message": "Next"
