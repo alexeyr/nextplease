@@ -12,18 +12,16 @@
         <label for="showAdvanced" data-i18n="optionsShowAdvanced"></label>
         <hr/>
         <div>
-            <!-- <input id="nextplease.general" type="checkbox" name="tabs"> -->
             <label for="nextplease.general" data-i18n="optionsGeneralTitle">Label One</label>
             <div>
                 <div>
                     <input type="checkbox" id="nextpleaseAllowSubmit" data-pref="allowsubmit">
                     <label for="nextpleaseAllowSubmit" data-i18n="optionsEnableSubmit"></label>
                 </div>
-                <!-- Always enable for now -->
-                <!-- <div>
+                <div>
                     <input type="checkbox" id="nextpleaseAllowContextMenu" data-pref="allowcontextmenu">
                     <label for="nextpleaseAllowContextMenu" data-i18n="optionsEnableContextMenu"></label>
-                </div> -->
+                </div>
                 <div>
                     <input type="checkbox" id="nextpleaseAllowSmartNext" data-pref="allowsmartnext">
                     <label for="nextpleaseAllowSmartNext" data-i18n="optionsSmartNext"></label>
@@ -51,70 +49,8 @@
                 </div>
             </div>
         </div>
-        <!-- TODO keys currently not customizable -->
-        <!-- <div>
-            <legend data-i18n="optionsKeyBindings"/>
-            <vbox>
-                <label class="warning">&optionsKeyBindingsChangeWarning;</label>
-                <separator class="thin"/>
-                <hbox align="center">
-                    <input type="checkbox" id="nextpleaseAllowNumberShortcuts"
-                            data-pref="allownumbershortcuts"/>
-                    <select id="nextpleaseNumberShortcutModifier" preference-editable="true" data-pref="numbermodifier" onsynctodata-pref="return nextplease.syncModifierPref(this)" style="margin-right: 0">
-                        <menupopup/>
-                    </select>
-                    <label id="nextpleaseAllowNumberShortcuts1"/>
-                </hbox>
-                <separator class="thin"/>
-                <label>&optionsPressShortcut;</label>
-                <grid>
-                    <columns>
-                        <column/>
-                        <column/>
-                        <column/>
-                        <column/>
-                        <column/>
-                    </columns>
-                    <rows>
-                        <row align="center">
-                            <input type="checkbox" id="enable_nextkey_check" data-pref="enable.nextkey"/>
-                            <label value="&optionsNextKey"/>
-                            <textbox id="nextkey_text" onkeypress="return nextplease.handleKeySelection(this, event)" onfocus="nextplease.prepareKeySelection(this)" onblur="nextplease.finishKeySelection(this)"/>
-                            <textbox id="nextkey_text_modifier" collapsed="true" preference-editable="true" data-pref="keymodifier"/>
-                            <textbox id="nextkey_text_key" type="number" collapsed="true" preference-editable="true" data-pref="nextkey"/>
-                            <input type="checkbox" id="nextkey_check" collapsed="true" data-pref="iskeycode.nextkey"/>
-                        </row>
-                        <row align="center">
-                            <input type="checkbox" id="enable_prevkey_check" data-pref="enable.prevkey"/>
-                            <label value="&optionsPrevKey"/>
-                            <textbox id="prevkey_text" onkeypress="return nextplease.handleKeySelection(this, event)" onfocus="nextplease.prepareKeySelection(this)" onblur="nextplease.finishKeySelection(this)"/>
-                            <textbox id="prevkey_text_modifier" collapsed="true" preference-editable="true" data-pref="prevkeymodifier"/>
-                            <textbox id="prevkey_text_key" type="number" collapsed="true" preference-editable="true" data-pref="prevkey"/>
-                            <input type="checkbox" id="prevkey_check" collapsed="true" data-pref="iskeycode.prevkey"/>
-                        </row>
-                        <row align="center">
-                            <input type="checkbox" id="enable_firstkey_check" data-pref="enable.firstkey"/>
-                            <label value="&optionsFirstKey"/>
-                            <textbox id="firstkey_text" onkeypress="return nextplease.handleKeySelection(this, event)" onfocus="nextplease.prepareKeySelection(this)" onblur="nextplease.finishKeySelection(this)"/>
-                            <textbox id="firstkey_text_modifier" collapsed="true" preference-editable="true" data-pref="firstkeymodifier"/>
-                            <textbox id="firstkey_text_key" type="number" collapsed="true" preference-editable="true" data-pref="firstkey"/>
-                            <input type="checkbox" id="firstkey_check" collapsed="true" data-pref="iskeycode.firstkey"/>
-                        </row>
-                        <row align="center">
-                            <input type="checkbox" id="enable_lastkey_check" data-pref="enable.lastkey"/>
-                            <label value="&optionsLastKey"/>
-                            <textbox id="lastkey_text" onkeypress="return nextplease.handleKeySelection(this, event)" onfocus="nextplease.prepareKeySelection(this)" onblur="nextplease.finishKeySelection(this)"/>
-                            <textbox id="lastkey_text_modifier" collapsed="true" preference-editable="true" data-pref="lastkeymodifier"/>
-                            <textbox id="lastkey_text_key" type="number" collapsed="true" preference-editable="true" data-pref="lastkey"/>
-                            <input type="checkbox" id="lastkey_check" collapsed="true" data-pref="iskeycode.lastkey"/>
-                        </row>
-                    </rows>
-                </grid>
-            </vbox>
-        </div> -->
         <hr/>
         <div>
-            <!-- <input id="nextplease.matches" type="checkbox" name="tabs"> -->
             <label for="nextplease.matches" data-i18n="optionsMatching"></label>
             <div>
                 <div class="directions">
@@ -134,12 +70,6 @@
                         <input type="radio" id="last" value="last" name="directions">
                         <label data-i18n="lastUpperCase" for="last"></label>
                     </div>
-                    <!-- <select id="matchesDirection" size="4">
-                        <option data-i18n="nextUpperCase" value="next" />
-                        <option data-i18n="prevUpperCase" value="prev" />
-                        <option data-i18n="firstUpperCase" value="first" />
-                        <option data-i18n="lastUpperCase" value="last" />
-                    </select> -->
                 </div>
                 <div class="content">
                     <fieldset class="fl">
@@ -182,7 +112,6 @@
         </div>
         <div class="advanced">
             <hr class="cb" />
-            <!-- <input id="nextplease.debug" type="checkbox" name="tabs"> -->
             <label for="nextplease.debug" data-i18n="optionsDebug">Label Three</label>
             <div>
                 <label for="logLevel" data-i18n="optionsLogLabel"></label>
