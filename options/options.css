@@ -5,27 +5,60 @@ input, label, select, button {
   overflow: hidden;
 }
 .directions {
-  display: inline-block;
-  vertical-align: top;
-  overflow: hidden;
-  border: solid darkgrey 1pt;
+  position: relative;
+  clear: both;
+  margin: 10px 0;
+}
+.direction {
   float: left;
 }
-#matchesDirection {
-  padding: 10px;
-  margin: -5px -20px -5px -5px;
+.direction label {
+  background: #eee;
+  padding: 5px;
+  border: 1px solid #ccc;
+  margin-left: -1px;
+  position: relative;
+  left: 1px;
+}
+.direction [type=radio] {
+  display: none;
+}
+.direction [type=radio]:checked ~ label {
+  background: white;
+  border-bottom: 1px solid white;
+  z-index: 2;
+}
+/* This avoids the white pixel at the bottom-left of first tab */
+.direction [type=radio]:checked ~ label:before {
+  display: block;
+  content: "";
+  color: transparent;
+  font-size: 0;
+  border-left: 1px solid #ccc;
+  height: 100%;
+  position: absolute;
+  left: -1px;
+  padding: 1px 0; /* Equals top/bottom border of previous style */
+  top: -1px; /* Equals top border of previous style */
+  bottom: -1px; /* Equals bottom border of previous style */
+}
+.content {
+  clear: both;
+  float: left;
+  width: 100%;
+  background: white;
+  padding: 5px;
+  margin-block-end: 10px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  position: relative;
+  top: 5px;
 }
 .fl {
   float: left
 }
-.pb10 {
-  padding-bottom: 10pt
-}
 .w100 {
   width: 100%;
-}
-.lh3 {
-  line-height: 3em;
 }
 .cb {
   clear: both;

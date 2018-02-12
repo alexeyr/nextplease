@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="options.css" />
 </head>
+
 <body>
     <form class="no-scroll">
         <input type="checkbox" id="showAdvanced" data-pref="showAdvanced">
         <label for="showAdvanced" data-i18n="optionsShowAdvanced"></label>
         <hr/>
-        <div class="tab">
+        <div>
             <!-- <input id="nextplease.general" type="checkbox" name="tabs"> -->
             <label for="nextplease.general" data-i18n="optionsGeneralTitle">Label One</label>
-            <div class="tab-content">
+            <div>
                 <div>
                     <input type="checkbox" id="nextpleaseAllowSubmit" data-pref="allowsubmit">
                     <label for="nextpleaseAllowSubmit" data-i18n="optionsEnableSubmit"></label>
@@ -50,7 +52,7 @@
             </div>
         </div>
         <!-- TODO keys currently not customizable -->
-        <!-- <div class="tab">
+        <!-- <div>
             <legend data-i18n="optionsKeyBindings"/>
             <vbox>
                 <label class="warning">&optionsKeyBindingsChangeWarning;</label>
@@ -111,21 +113,37 @@
             </vbox>
         </div> -->
         <hr/>
-        <div class="tab">
+        <div>
             <!-- <input id="nextplease.matches" type="checkbox" name="tabs"> -->
             <label for="nextplease.matches" data-i18n="optionsMatching"></label>
-            <div class="tab-content">
+            <div>
                 <div class="directions">
-                    <select id="matchesDirection" size="4">
+                    <div class="direction">
+                        <input type="radio" id="next" value="next" name="directions">
+                        <label data-i18n="nextUpperCase" for="next"></label>
+                    </div>
+                    <div class="direction">
+                        <input type="radio" id="prev" value="prev" name="directions">
+                        <label data-i18n="prevUpperCase" for="prev"></label>
+                    </div>
+                    <div class="direction">
+                        <input type="radio" id="first" value="first" name="directions">
+                        <label data-i18n="firstUpperCase" for="first"></label>
+                    </div>
+                    <div class="direction">
+                        <input type="radio" id="last" value="last" name="directions">
+                        <label data-i18n="lastUpperCase" for="last"></label>
+                    </div>
+                    <!-- <select id="matchesDirection" size="4">
                         <option data-i18n="nextUpperCase" value="next" />
                         <option data-i18n="prevUpperCase" value="prev" />
                         <option data-i18n="firstUpperCase" value="first" />
                         <option data-i18n="lastUpperCase" value="last" />
-                    </select>
+                    </select> -->
                 </div>
-                <div>
+                <div class="content">
                     <fieldset class="fl">
-                        <label data-i18n="optionsTextTitle" class="pb10"></label>
+                        <legend data-i18n="optionsTextTitle"></legend>
                         <div>
                             <select id="textList" size="10" multiple class="w100"></select>
                             <div style="display:flex;">
@@ -142,7 +160,7 @@
                         </div>
                     </fieldset>
                     <fieldset>
-                        <label data-i18n="optionsImageUrls" class="pb10"></label>
+                        <legend data-i18n="optionsImageUrls"></legend>
                         <div>
                             <select id="imageList" size="10" multiple class="w100"></select>
                             <div style="display:flex;">
@@ -152,21 +170,21 @@
                             <button id="imageRemoveButton" data-i18n="optionsRemove" disabled></button>
                             <button id="imageReset" data-i18n="optionsRestoreDefault"></button>
                         </div>
-                        <div class="advanced">
-                            <label for="galleryRegex" data-i18n="optionsRegex"></label>
-                            <input id="galleryRegex" class="regex" type="text" data-pref="galleryRegex">
-                            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" data-i18n="optionsRegexSyntax"></a>
-                            <button data-i18n="optionsRestoreDefault"></button>
-                        </div>
                     </fieldset>
+                </div>
+                <div class="advanced" class="cb fl">
+                    <label for="galleryRegex" data-i18n="optionsRegex"></label>
+                    <input id="galleryRegex" class="regex" type="text" data-pref="galleryRegex">
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" data-i18n="optionsRegexSyntax"></a>
+                    <button data-i18n="optionsRestoreDefault"></button>
                 </div>
             </div>
         </div>
-        <div class="tab advanced">
-            <hr class="cb"/>
+        <div class="advanced">
+            <hr class="cb" />
             <!-- <input id="nextplease.debug" type="checkbox" name="tabs"> -->
             <label for="nextplease.debug" data-i18n="optionsDebug">Label Three</label>
-            <div class="tab-content">
+            <div>
                 <label for="logLevel" data-i18n="optionsLogLabel"></label>
                 <select id="logLevel" data-pref="logLevel">
                     <option value="0" data-i18n="optionsLogNone" />
@@ -184,4 +202,5 @@
     <script src="default_options.js"></script>
     <script src="options.js"></script>
 </body>
+
 </html>

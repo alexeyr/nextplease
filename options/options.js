@@ -181,13 +181,15 @@
         function directionTextPref(direction = currentDirection) { return `${currentDirection}phrase.expr0`; }
         function directionImagePref(direction = currentDirection) { return `${currentDirection}image.expr0`; }
 
-        $("#matchesDirection").change(function () {
-            currentDirection = this.value;
-            fillListFromPref("text", directionTextPref());
-            fillListFromPref("image", directionImagePref());
-            $("#textAdd").val("").trigger("keyup");
-            $("#imageAdd").val("").trigger("keyup");
-            $("#directionRegex").val(nextplease.prefs[directionRegexPref()]);
+        $(".direction input").change(function () {
+            if (this.checked) {
+                currentDirection = this.value;
+                fillListFromPref("text", directionTextPref());
+                fillListFromPref("image", directionImagePref());
+                $("#textAdd").val("").trigger("keyup");
+                $("#imageAdd").val("").trigger("keyup");
+                $("#directionRegex").val(nextplease.prefs[directionRegexPref()]);
+            }
         });
 
         $("#directionRegex").change(function () {
@@ -220,7 +222,7 @@
                 this.value = nextplease.prefs[this.pref];
             });
 
-            $("#matchesDirection").val("next").trigger("change");
+            $("#next").attr("checked", true).trigger("change");
         }
 
         $("#restoreAll").click(function () {
