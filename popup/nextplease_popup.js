@@ -26,6 +26,6 @@ function reportExecuteScriptError(error) {
     console.error(`Failed to execute NextPlease script: ${error.message}`);
 }
 
-browser.tabs.executeScript({ file: "/content_scripts/nextplease.js" })
+browser.tabs.executeScript({ file: "/scripts/nextplease_content.js" })
     .then(listenForClicks)
     .catch(reportExecuteScriptError);
