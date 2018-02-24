@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: off */
 function initDefaultOptions(prefs) {
     function init(key, value) {
         if (prefs[key] === undefined) prefs[key] = value;

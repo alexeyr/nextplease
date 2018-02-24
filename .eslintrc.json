@@ -1,0 +1,31 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "webextensions": true,
+        "jquery": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": ["off"],
+        "no-undef": ["off"],
+        "no-unused-vars": ["error", {
+            "args": "none"
+        }]
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    }
+}

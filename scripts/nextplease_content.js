@@ -293,16 +293,16 @@
         if (link.rel && link.href) {
             var rel = link.rel.toLowerCase();
             if (rel === "next") {
-                nextplease.log('found rel="' + link.rel + '": ' + link.href);
+                nextplease.log(`found rel="${link.rel}": ${link.href}`);
                 return "Next";
             } else if ((rel === "prev") || (rel === "previous")) {
-                nextplease.log('found rel="' + link.rel + '": ' + link.href);
+                nextplease.log(`found rel="${link.rel}": ${link.href}`);
                 return "Prev";
             } else if ((rel === "first") || (rel === "start") || (rel === "begin")) {
-                nextplease.log('found rel="' + link.rel + '": ' + link.href);
+                nextplease.log(`found rel="${link.rel}": ${link.href}`);
                 return "First";
             } else if ((rel === "end") || (rel === "last")) {
-                nextplease.log('found rel="' + link.rel + '": ' + link.href);
+                nextplease.log(`found rel="${link.rel}": ${link.href}`);
                 return "Last";
             }
         }
@@ -314,19 +314,19 @@
             text = text.toLowerCase();
             var direction1 = nextplease.PhraseMap[text];
             if (direction1) {
-                nextplease.log('found text match for "' + text + '"');
+                nextplease.log(`found text match for "${text}"`);
                 return direction1;
             } else {
                 if (prefetching) {
                     for (let i = 0; i < nextplease.directions.length; i++) {
                         var direction2 = nextplease.directions[i];
                         if (!nextplease.prefetched[direction2] && nextplease.RegExes[direction2].test(text)) {
-                            nextplease.log('found regex match for "' + text + '"');
+                            nextplease.log(`found regex match for "${text}"`);
                             return direction2;
                         }
                     }
                 } else if (nextplease.RegExes[direction].test(text)) {
-                    nextplease.log('found regex match for "' + text + '"');
+                    nextplease.log(`found regex match for "${text}"`);
                     return direction;
                 }
             }
@@ -375,9 +375,7 @@
         var pageNumLinks = { Next: null, Prev: null, First: null, Last: null, Tmp: null };
 
         var firstPageNum;
-        var currentPageNum = 100000; // Init to arbitrarily large num
         var tmpPageNum = 100000; // Init to arbitrarily large num
-        var greatestNum = 1;
         var insideNumberBlock = false;
 
         var link;
@@ -519,22 +517,15 @@
                         nextplease.logDetail("New number block started");
                         insideNumberBlock = true;
                         //    alert(linkPageNum);
-                        //    alert(currentPageNum);
                         pageNumLinks.First = link;
                         firstPageNum = linkPageNum;
-                        greatestNum = linkPageNum;
 
                         pageNumLinks.Prev = null;
                         pageNumLinks.Next = null;
                         pageNumLinks.Last = null;
-                        currentPageNum = linkPageNum;
 
                         pageNumLinks.First = link;
-                        greatestNum = linkPageNum;
                         pageNumLinks.Last = null;
-                        //} else if (currentPageNum === linkPageNum) {
-                        //    currentPageNum++;
-                        //    pageNumLinks.Prev = link;
                     } else if (tmpPageNum + 1 === linkPageNum) {
                         nextplease.logDetail("next link in number block");
                         pageNumLinks.Last = link;
@@ -765,40 +756,40 @@
         }
 
         switch (result[0]) {
-            case nextplease.ResultType.URL:
-                var url = result[1];
-                curWindow.open(url, "_self", "");
-                return true;
-            case nextplease.ResultType.Link:
-                var linkNode = result[1];
-                if (!linkNode) {
-                    nextplease.logError("Tried to open undefined link, this should never happen!");
-                    return false;
-                }
-                // If it's got an onclick attr, then try to 
-                // simulate a mouse click to activate link.
-                if (linkNode.hasAttribute("onclick")) {
-                    // alert(linkNode.getAttribute("onclick"));
-                    var e = document.createEvent("MouseEvents");
-                    // e.initMouseEvent("click", 1, 1, window, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, linkNode);
+        case nextplease.ResultType.URL:
+            var url = result[1];
+            curWindow.open(url, "_self", "");
+            return true;
+        case nextplease.ResultType.Link:
+            var linkNode = result[1];
+            if (!linkNode) {
+                nextplease.logError("Tried to open undefined link, this should never happen!");
+                return false;
+            }
+            // If it's got an onclick attr, then try to 
+            // simulate a mouse click to activate link.
+            if (linkNode.hasAttribute("onclick")) {
+                // alert(linkNode.getAttribute("onclick"));
+                var e = document.createEvent("MouseEvents");
+                // e.initMouseEvent("click", 1, 1, window, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, linkNode);
 
-                    // From https://developer.mozilla.org/en/DOM/event.initMouseEvent
-                    e.initMouseEvent("click", true, true, window,
-                        0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                    linkNode.dispatchEvent(e);
-                } else {
-                    curWindow.open(linkNode.href, "_self", "");
-                }
-                nextplease.gotHereUsingNextplease = true;
-                return true;
-            case nextplease.ResultType.Input:
-                var input = result[1];
-                input.click();
-                return true;
-            case nextplease.ResultType.History:
-                var num = result[1];
-                curWindow.history.go(num);
-                return true;
+                // From https://developer.mozilla.org/en/DOM/event.initMouseEvent
+                e.initMouseEvent("click", true, true, window,
+                    0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                linkNode.dispatchEvent(e);
+            } else {
+                curWindow.open(linkNode.href, "_self", "");
+            }
+            nextplease.gotHereUsingNextplease = true;
+            return true;
+        case nextplease.ResultType.Input:
+            var input = result[1];
+            input.click();
+            return true;
+        case nextplease.ResultType.History:
+            var num = result[1];
+            curWindow.history.go(num);
+            return true;
         }
     };
 
@@ -892,19 +883,19 @@
         if (result) {
             var element;
             switch (result[0]) {
-                case nextplease.ResultType.URL:
-                    break;
-                case nextplease.ResultType.Link:
-                case nextplease.ResultType.Input:
-                    element = result[1];
-                    break;
-                // case nextplease.ResultType.History:
-                // TODO The forward button doesn't get unhighlighted correctly
-                // when it becomes disabled.
-                // switch (result[1]) {
-                //     case 1: element = document.getElementById("forward-button"); break;
-                //     case -1: element = document.getElementById("back-button"); break;
-                // }
+            case nextplease.ResultType.URL:
+                break;
+            case nextplease.ResultType.Link:
+            case nextplease.ResultType.Input:
+                element = result[1];
+                break;
+            // case nextplease.ResultType.History:
+            // TODO The forward button doesn't get unhighlighted correctly
+            // when it becomes disabled.
+            // switch (result[1]) {
+            //     case 1: element = document.getElementById("forward-button"); break;
+            //     case -1: element = document.getElementById("back-button"); break;
+            // }
             }
             if (element) {
                 if (!nextplease.highlighted_old_styles[element]) {
@@ -947,7 +938,7 @@
                 } else {
                     var textOrUrl = nextplease.getTextOrUrlUnderPopup();
                     var phraseOrImage = gContextMenu.onImage ? "Image" : "Phrase";
-                    document.getElementById("nextpleaseTextOrURL").label = gContextMenu.onImage ? textOrUrl : '"' + textOrUrl + '"';
+                    document.getElementById("nextpleaseTextOrURL").label = gContextMenu.onImage ? textOrUrl : `"${textOrUrl}"`;
                     var directionForItem = nextplease[phraseOrImage + "Map"][textOrUrl];
                     for (i = 0; i < numDirections; i++) {
                         direction = nextplease.directions[i];
@@ -1036,8 +1027,8 @@
     };
 
     nextplease.addToPrefs = function (prefbranch, text) {
-        nextplease.logDetail("adding " + text + " to " + prefbranch);
-        var prefname = prefbranch + '.expr0';
+        nextplease.logDetail(`adding ${text} to ${prefbranch}`);
+        var prefname = prefbranch + ".expr0";
         var prefvalue = nextplease.prefs[prefname];
         var resultprefvalue = prefvalue + "|" + text.replace(/\|/g, "&pipe;");
 
@@ -1046,8 +1037,8 @@
     };
 
     nextplease.removeFromPrefs = function (prefbranch, text) {
-        nextplease.logDetail("removing " + text + " from " + prefbranch);
-        var tempprefname = prefbranch + '.expr0';
+        nextplease.logDetail(`removing ${text} from ${prefbranch}`);
+        var tempprefname = prefbranch + ".expr0";
         var prefvalue = nextplease.prefs[tempprefname];
         var text1 = new RegExp("\\|" + text.replace(/\|/g, "&pipe;") + "(?=\\||$)", "g");
         var resultprefvalue = prefvalue.replace(text1, "");

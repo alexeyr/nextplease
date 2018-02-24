@@ -151,9 +151,9 @@
         });
 
         var currentDirection;
-        function directionRegexPref(direction = currentDirection) { return `${currentDirection}regex`; }
-        function directionTextPref(direction = currentDirection) { return `${currentDirection}phrase.expr0`; }
-        function directionImagePref(direction = currentDirection) { return `${currentDirection}image.expr0`; }
+        function directionRegexPref(direction = currentDirection) { return `${direction}regex`; }
+        function directionTextPref(direction = currentDirection) { return `${direction}phrase.expr0`; }
+        function directionImagePref(direction = currentDirection) { return `${direction}image.expr0`; }
 
         $(".direction input").change(function () {
             if (this.checked) {
@@ -236,7 +236,7 @@
     }
 
     ShortcutCustomizeUI.build().then(list => {
-        let shortcutsDiv = document.getElementById('shortcuts');
+        let shortcutsDiv = document.getElementById("shortcuts");
         let message = browser.i18n.getMessage("optionsKeyShortcuts") + 
             (ShortcutCustomizeUI.available ? "" : ` ${browser.i18n.getMessage("optionsKeyShortcutsUnavailable")}`);
         shortcutsDiv.insertAdjacentHTML("afterbegin", `<label>${message}</label>`);
