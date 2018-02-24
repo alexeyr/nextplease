@@ -69,7 +69,7 @@
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["options/default_options.js", "content_scripts/nextplease.js"]
+            "js": ["scripts/nextplease_common.js", "content_scripts/nextplease.js"]
         }
     ]
 }

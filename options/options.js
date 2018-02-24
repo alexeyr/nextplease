@@ -1,30 +1,4 @@
 (function () {
-    var nextplease = { prefs: {} };
-
-    // TODO common functions, remove duplication
-    nextplease.log = function (message) {
-        if (nextplease.prefs.logLevel > 0) {
-            console.log(message);
-        }
-    };
-
-    nextplease.logDetail = function (message) {
-        if (nextplease.prefs.logLevel > 1) {
-            console.debug(message);
-        }
-    };
-
-    nextplease.logError = console.error;
-
-    nextplease.getDirectionString = function (dir) {
-        return browser.i18n.getMessage(dir + "Page");
-    };
-
-    function stringArrayFromPref(prefName) {
-        return nextplease.prefs[prefName].split("|").map((x) => x.toLowerCase().replace(/&pipe;/g, "|"));
-    }
-    // TODO common functions end
-
     function onError(error) {
         console.error(`Error: ${error}`);
     }
@@ -213,7 +187,6 @@
             nextplease.prefs = options;
             initDefaultOptions(nextplease.prefs);
 
-            // TODO fill form from nextplease.prefs
             prefCheckboxes.each(function () {
                 let value = nextplease.prefs[this.pref];
                 this.checked = value;

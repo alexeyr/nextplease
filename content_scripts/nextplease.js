@@ -9,8 +9,26 @@
     }
     window.hasRun = true;
 
-    var nextplease = {};
-
+    nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
+        var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
+        var removeConfirmationText =
+            browser.i18n.getMessage(
+                removeConfirmationKey,
+                [textOrUrl, nextplease.getDirectionString(currentDirection)]);
+        return window.confirm(removeConfirmationText);
+    };
+    
+    nextplease.confirmReplace = function (phraseOrImage, textOrUrl, currentDirection, newDirection) {
+        var replaceConfirmationKey = "replace" + phraseOrImage + "Confirmation";
+        var replaceConfirmationText =
+            browser.i18n.getMessage(
+                replaceConfirmationKey,
+                [textOrUrl,
+                    nextplease.getDirectionString(currentDirection),
+                    nextplease.getDirectionString(newDirection)]);
+        return window.confirm(replaceConfirmationText);
+    };
+    
     /**
       * Listen for messages from the popup script.
       */
@@ -50,50 +68,6 @@
         }
         onOptionsLoaded({});
     });
-
-    // TODO common functions, remove duplication
-    nextplease.log = function (message) {
-        if (nextplease.prefs.logLevel > 0) {
-            console.log(message);
-        }
-    };
-
-    nextplease.logDetail = function (message) {
-        if (nextplease.prefs.logLevel > 1) {
-            console.debug(message);
-        }
-    };
-
-    nextplease.logError = console.error;
-
-    nextplease.getDirectionString = function (dir) {
-        return browser.i18n.getMessage(dir + "Page");
-    };
-
-    nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
-        var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
-        var removeConfirmationText =
-            browser.i18n.getMessage(
-                removeConfirmationKey,
-                [textOrUrl, nextplease.getDirectionString(currentDirection)]);
-        return window.confirm(removeConfirmationText);
-    };
-
-    nextplease.confirmReplace = function (phraseOrImage, textOrUrl, currentDirection, newDirection) {
-        var replaceConfirmationKey = "replace" + phraseOrImage + "Confirmation";
-        var replaceConfirmationText =
-            browser.i18n.getMessage(
-                replaceConfirmationKey,
-                [textOrUrl,
-                    nextplease.getDirectionString(currentDirection),
-                    nextplease.getDirectionString(newDirection)]);
-        return window.confirm(replaceConfirmationText);
-    };
-
-    function stringArrayFromPref(prefName) {
-        return nextplease.prefs[prefName].split("|").map((x) => x.toLowerCase().replace(/&pipe;/g, "|"));
-    }
-    // TODO common functions end
 
     // TODO use context menus correctly
     // window.addEventListener("popupshowing", function () { nextplease.showHideMenuItems(); }, false);
