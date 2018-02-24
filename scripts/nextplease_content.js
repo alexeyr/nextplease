@@ -298,7 +298,7 @@
             } else if ((rel === "prev") || (rel === "previous")) {
                 nextplease.log('found rel="' + link.rel + '": ' + link.href);
                 return "Prev";
-            } else if ((rel === "start") || (rel === "first")) {
+            } else if ((rel === "first") || (rel === "start") || (rel === "begin")) {
                 nextplease.log('found rel="' + link.rel + '": ' + link.href);
                 return "First";
             } else if ((rel === "end") || (rel === "last")) {
