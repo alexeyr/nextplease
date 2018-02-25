@@ -1,61 +1,67 @@
 (function () {
-    function onError(error) {
-        console.error(`Error: ${error}`);
-    }
-
     function loadOptions() {
+        function isListbox(elem) {
+            return elem.tagName === "SELECT" && elem.attributes["multiple"];
+        }
+
+        function isCheckbox(elem) {
+            return elem.tagName === "INPUT" && elem.type === "checkbox";
+        }
+
+        function isTextbox(elem) {
+            return elem.tagName === "INPUT" && elem.type === "text";
+        }
+
         let prefElements = $("[data-pref]");
+        let prefsToElements = {};
 
         prefElements.each(function () {
             this.pref = this.getAttribute("data-pref");
+            prefsToElements[this.pref] = this;
         });
 
-        let prefCheckboxes = prefElements.filter("input[type=checkbox]");
-        let prefColors = prefElements.filter("input[type=color]");
-        let prefSelects = prefElements.filter("select");
-
-        function enableDisableSiblingInputs(elem, value) {
-            $(elem).siblings("input").each(function () {
-                this.disabled = !value;
-            });
-        }
-
-        prefCheckboxes.change(function () {
-            let value = this.checked;
-            setPref(this.pref, value);
-            enableDisableSiblingInputs(this, value);
+        let regexText = document.getElementById("directionRegex");
+        let textList = document.getElementById("textList");
+        let imageList = document.getElementById("imageList");
+    
+        nextplease.directions.forEach(direction => {
+            let direction1 = direction.toLowerCase();
+            prefsToElements[`${direction1}regex`] = regexText;
+            prefsToElements[`${direction1}phrase`] = textList;
+            prefsToElements[`${direction1}image`] = imageList;
         });
 
-        prefColors.change(function () {
-            setPref(this.pref, this.value);
+        nextplease.prefs.$addObserver(key => {
+            let elem = prefsToElements[key];
+            if (elem.pref === key) {
+                showPrefInUI(elem);
+            }
         });
 
-        prefSelects.change(function () {
-            setPref(this.pref, this.value);
+        prefElements.change(function () {
+            // for listboxes, change just means different selection,
+            // not value change
+            if (!isListbox(this)) {
+                setPrefFromUI(this);
+            }
+            if (isCheckbox(this)) {
+                // The checkboxes which have sibling inputs are 
+                // the highlight/highlightPrefetched ones.
+                // Disable the color inputs if they are unchecked.
+                let checked = this.checked;
+                $(this).siblings("input").each(function () {
+                    this.disabled = !checked;
+                });
+            }
         });
 
         function appendOption(listbox, value) {
-            listbox[0].values.push(value);
-            listbox.append(`<option value="${value}">${value}</option>`);
-        }
-
-        function fillListFromPref(type, prefName) {
-            let listbox = $(document.getElementById(type + "List"));
-
-            listbox.children("option").remove();
-
-            var values = stringArrayFromPref(prefName);
-            listbox[0].values = [];
-            for (var i = 0; i < values.length; i++) {
-                appendOption(listbox, values[i]);
-            }
-
-            let addTextbox = $(document.getElementById(type + "Add"));
-            addTextbox.val("").trigger("keyup");
+            listbox.values.push(value);
+            listbox.insertAdjacentHTML("beforeend", `<option value="${value}">${value}</option>`);
         }
 
         function setupListAddRemove(type) {
-            let isImage = "type" === "image";
+            let isImage = type === "image";
             let listbox = $(document.getElementById(type + "List"));
             let addTextbox = $(document.getElementById(type + "Add"));
             let addButton = $(document.getElementById(type + "AddButton"));
@@ -90,20 +96,14 @@
             });
 
             function addValue() {
-                appendOption(listbox, addTextbox.val());
-                setPrefFromListbox();
+                appendOption(listbox[0], addTextbox.val());
+                setPrefFromUI(listbox[0]);
                 // Why doesn't this work?
                 // listbox.find("option:last")[0].scrollIntoView();
                 // Working code from https://stackoverflow.com/a/7205792/9204
                 let optionTop = listbox.find("option:last").offset().top;
                 let listTop = listbox.offset().top;
                 listbox.scrollTop(listbox.scrollTop() + optionTop - listTop);
-            }
-
-            function setPrefFromListbox() {
-                let pref = isImage ? directionImagePref() : directionTextPref();
-                let value = listbox[0].values.map(x => x.replace(/\|/g, "&pipe;")).join("|");
-                setPref(pref, value);
             }
 
             listbox.change(function () {
@@ -124,13 +124,21 @@
             function removeSelectedValues() {
                 selectedOptions().remove();
                 listbox[0].values = listbox.find("option").get().map(x => x.value);
-                setPrefFromListbox();
+                setPrefFromUI(listbox[0]);
                 listbox.trigger("change");
             }
+
+            resetButton.click(() => resetPref(listbox[0].pref));
+        }
+
+        function resetPref(key) {
+            nextplease.prefs[key] = nextplease.prefs.$default[key];
         }
 
         setupListAddRemove("text");
         setupListAddRemove("image");
+        $("#regexResetButton").click(() => resetPref(directionRegexPref()));
+        $("#galleryRegexResetButton").click(() => resetPref("galleryregex"));
 
         let prefRegexes = $(".regex");
 
@@ -138,88 +146,101 @@
             var errorMessage;
             try {
                 if (this.value.trim()) {
-                    new RegExp(this.value);
-                    errorMessage = "";
+                    let regex = new RegExp(this.value);
+                    if (this.pref === "galleryregex") {
+                        var matches = regex.exec("http://nextplease.mozdev.org/test/test101.jpg");
+                        if (!matches || (matches.length !== 4)) {
+                            errorMessage = browser.i18n.getMessage("invalidGallery");
+                        } else {
+                            errorMessage = "";
+                        }
+                    } else {
+                        errorMessage = "";
+                    }
                 } else {
                     errorMessage = browser.i18n.getMessage("invalidEmpty");
                 }
             } catch (e) {
                 errorMessage = browser.i18n.getMessage("optionsRegexInvalid");
             }
-            console.log(`errorMessage: ${errorMessage}`);
             this.setCustomValidity(errorMessage);
         });
 
         var currentDirection;
         function directionRegexPref(direction = currentDirection) { return `${direction}regex`; }
-        function directionTextPref(direction = currentDirection) { return `${direction}phrase.expr0`; }
-        function directionImagePref(direction = currentDirection) { return `${direction}image.expr0`; }
+        function directionTextPref(direction = currentDirection) { return `${direction}phrase`; }
+        function directionImagePref(direction = currentDirection) { return `${direction}image`; }
+
+        function setPrefKey(elem, prefKey) {
+            elem.pref = prefKey;
+            showPrefInUI(elem);
+        }
 
         $(".direction input").change(function () {
             if (this.checked) {
                 currentDirection = this.value;
-                fillListFromPref("text", directionTextPref());
-                fillListFromPref("image", directionImagePref());
-                $("#textAdd").val("").trigger("keyup");
-                $("#imageAdd").val("").trigger("keyup");
-                $("#directionRegex").val(nextplease.prefs[directionRegexPref()]);
+
+                setPrefKey(textList, directionTextPref());
+                setPrefKey(imageList, directionImagePref());
+                setPrefKey(regexText, directionRegexPref());
+
+                // clear the textbox
+                $(".addTextbox").val("").trigger("keyup");
             }
         });
 
-        $("#directionRegex").change(function () {
-            if (this.checkValidity()) {
-                setPref(directionRegexPref(), this.value);
+        function setPrefFromUI(elem) {
+            let isValid = !elem.checkValidity || elem.checkValidity();
+            if (isValid) {
+                let prefExists = nextplease.prefs.hasOwnProperty(elem.pref);
+                if (prefExists) {
+                    var value;
+                    if (isListbox(elem)) {
+                        value = elem.values.map(x => x.replace(/\|/g, "&pipe;")).join("|");
+                    } else if (isCheckbox(elem)) {
+                        value = elem.checked;
+                    } else {
+                        value = elem.value;
+                    }
+                    // requires all values to be primitives!
+                    if (nextplease.prefs[elem.pref] !== value) {
+                        nextplease.prefs[elem.pref] = value;
+                    }
+                }
             }
-        });
-
-        $("#galleryRegex").change(function () {
-            if (this.checkValidity()) {
-                setPref(this.pref, this.value);
-            }
-        });
-
-        function setPref(key, value) {
-            console.log(`${key} := ${value}`); // comment out later
-            nextplease.prefs[key] = value;
         }
 
-        function setFromStored(options) {
-            nextplease.prefs = options;
-            initDefaultOptions(nextplease.prefs);
+        function showPrefInUI(elem) {
+            let value = nextplease.prefs[elem.pref];
+            if (isListbox(elem)) {
+                showListPref(elem);
+            } else if (isCheckbox(elem)) {
+                elem.checked = value;
+            } else {
+                elem.value = value;
+            }
+            let jqElem = $(elem);
+            jqElem.trigger("change");
+            if (isTextbox(elem)) {
+                jqElem.trigger("keyup");
+            }
+        }
 
-            prefCheckboxes.each(function () {
-                let value = nextplease.prefs[this.pref];
-                this.checked = value;
-                $(this).trigger("change");
-            });
+        function showListPref(listbox) {
+            $(listbox).children("option").remove();
 
-            prefColors.each(function () {
-                this.value = nextplease.prefs[this.pref];
-            });
-
-            prefSelects.each(function () {
-                this.value = nextplease.prefs[this.pref];
-            });
-
-            $("#galleryRegex").each(function () {
-                this.value = nextplease.prefs[this.pref];
-            });
-
-            $("#next").attr("checked", true).trigger("change");
+            var values = stringArrayFromPref(listbox.pref);
+            listbox.values = [];
+            for (var i = 0; i < values.length; i++) {
+                appendOption(listbox, values[i]);
+            }
         }
 
         $("#restoreAll").click(function () {
-            setFromStored({});
+            nextplease.prefs.$reset();
+            // $reset doesn't notify observers
+            loadOptions();
         });
-
-        function saveOptions(e) {
-            e.preventDefault();
-            // for debugging, uncomment next line once this works well
-            console.dir(nextplease.prefs);
-            // browser.storage.sync.set(nextplease.prefs).catch(onError);
-        }
-
-        $("#save").click(saveOptions);
 
         $("button").click(e => e.preventDefault());
 
@@ -232,7 +253,14 @@
             }
         });
 
-        browser.storage.sync.get(null).then(setFromStored, onError);
+        function onOptionsLoaded() {
+            prefElements.each(function () { showPrefInUI(this); });
+
+            let checkedDirection = $("input[name=directions]:checked");
+            checkedDirection.trigger("change");
+        }
+
+        nextplease.prefs.$loaded.then(onOptionsLoaded, nextplease.logError);
     }
 
     ShortcutCustomizeUI.build().then(list => {

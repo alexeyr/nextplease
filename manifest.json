@@ -63,13 +63,13 @@
     ],
 
     "background": {
-        "scripts": ["scripts/nextplease_background.js"]
+        "scripts": ["lib/configs/Configs.js", "scripts/nextplease_common.js", "scripts/nextplease_background.js"]
     },
 
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["scripts/nextplease_common.js", "scripts/nextplease_content.js"]
+            "js": ["lib/configs/Configs.js", "scripts/nextplease_common.js", "scripts/nextplease_content.js"]
         }
     ]
 }

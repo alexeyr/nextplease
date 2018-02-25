@@ -20,10 +20,17 @@
             "always"
         ],
         "no-console": ["off"],
-        "no-undef": ["off"],
         "no-unused-vars": ["error", {
             "args": "none"
         }]
+    },
+    "globals": {
+        "nextplease": true,
+        "ShortcutCustomizeUI": true,
+        "Configs": true,
+        "stringArrayFromPref": true,
+        "getBrowser": false, // FIXME
+        "gContextMenu": false // FIXME
     },
     "parserOptions": {
         "ecmaVersion": 2017

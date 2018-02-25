@@ -22,7 +22,7 @@
 
         if (translateable.label) {
             translateable.label.textContent = message;
-        } else if (translateable.tagName === "input") {
+        } else if (translateable.tagName === "INPUT") {
             translateable.value = message;
         } else {
             translateable.textContent = message;

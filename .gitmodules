@@ -1,3 +1,6 @@
 [submodule "lib-shortcut-customize-ui"]
 	path = lib/shortcut-customize-ui
 	url = https://github.com/piroor/webextensions-lib-shortcut-customize-ui
+[submodule "lib/configs"]
+	path = lib/configs
+	url = https://github.com/piroor/webextensions-lib-configs

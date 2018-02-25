@@ -55,7 +55,7 @@
             <div>
                 <div class="directions">
                     <div class="direction">
-                        <input type="radio" id="next" value="next" name="directions">
+                        <input type="radio" id="next" value="next" name="directions" checked="true">
                         <label data-i18n="nextUpperCase" for="next"></label>
                     </div>
                     <div class="direction">
@@ -75,37 +75,37 @@
                     <fieldset class="fl">
                         <legend data-i18n="optionsTextTitle"></legend>
                         <div>
-                            <select id="textList" size="10" multiple class="w100"></select>
+                            <select id="textList" size="10" multiple class="w100" data-pref="directionphrase"></select>
                             <div style="display:flex;">
-                                <input id="textAdd" type="text" class="w100">
+                                <input id="textAdd" type="text" class="w100 addTextbox">
                                 <button id="textAddButton" data-i18n="add" disabled></button>
                             </div>
                             <button id="textRemoveButton" data-i18n="optionsRemove" disabled></button>
-                            <button id="textReset" data-i18n="optionsRestoreDefault"></button>
+                            <button id="textResetButton" data-i18n="optionsRestoreDefault"></button>
                             <div class="advanced">
                                 <label for="directionRegex" data-i18n="optionsRegex"></label>
-                                <input id="directionRegex" class="regex" type="text" />
-                                <button data-i18n="optionsRestoreDefault"></button>
+                                <input id="directionRegex" class="regex" type="text" data-pref="directionregex" />
+                                <button id="regexResetButton" data-i18n="optionsRestoreDefault"></button>
                             </div>
                         </div>
                     </fieldset>
                     <fieldset>
                         <legend data-i18n="optionsImageUrls"></legend>
                         <div>
-                            <select id="imageList" size="10" multiple class="w100"></select>
+                            <select id="imageList" size="10" multiple class="w100" data-pref="directionimage"></select>
                             <div style="display:flex;">
-                                <input id="imageAdd" type="text" class="w100">
+                                <input id="imageAdd" type="text" class="w100 addTextbox">
                                 <button id="imageAddButton" data-i18n="add" disabled></button>
                             </div>
                             <button id="imageRemoveButton" data-i18n="optionsRemove" disabled></button>
-                            <button id="imageReset" data-i18n="optionsRestoreDefault"></button>
+                            <button id="imageResetButton" data-i18n="optionsRestoreDefault"></button>
                         </div>
                     </fieldset>
                 </div>
                 <div class="advanced" class="cb fl">
                     <label for="galleryRegex" data-i18n="optionsGalleryRegex"></label>
                     <input id="galleryRegex" class="regex" type="text" data-pref="galleryregex">
-                    <button data-i18n="optionsRestoreDefault"></button>
+                    <button id="galleryRegexResetButton" data-i18n="optionsRestoreDefault"></button>
                     <a class="vertical-center" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions" data-i18n="optionsRegexSyntax"></a>
                 </div>
             </div>
@@ -113,6 +113,7 @@
         <hr class="cb" />
         <div id="shortcuts" class="w100"></div>
         <div class="advanced">
+            <hr class="cb" />
             <label for="nextplease.debug" data-i18n="optionsDebug">Label Three</label>
             <div>
                 <label for="logLevel" data-i18n="optionsLogLabel"></label>
@@ -124,12 +125,12 @@
             </div>
         </div>
         <hr class="cb">
-        <button id="save" type="submit" data-i18n="optionsSave"></button>
         <button id="restoreAll" data-i18n="optionsRestoreDefaultAll"></button>
     </form>
     <script src="../jquery-3.3.1.slim.min.js"></script>
     <script src="../translate.js"></script>
     <script src="../lib/shortcut-customize-ui/ShortcutCustomizeUI.js"></script>
+    <script src="../lib/configs/Configs.js"></script>
     <script src="../scripts/nextplease_common.js"></script>
     <script src="nextplease_options.js"></script>
 </body>

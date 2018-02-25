@@ -9,6 +9,8 @@
     }
     window.hasRun = true;
 
+    const isInt = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/;
+
     nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
         var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
         var removeConfirmationText =
@@ -29,10 +31,9 @@
         return window.confirm(replaceConfirmationText);
     };
     
-    /**
-      * Listen for messages from the popup script.
-      */
+    // Listen for messages from the popup and from commands
     browser.runtime.onMessage.addListener((message) => {
+        // TODO handle number shortcuts when commands are added
         if (typeof message.command === "number") {
             nextplease.openNumberedLink(window, message.command);
         } else {
@@ -40,10 +41,8 @@
         }
     });
 
-    function onOptionsLoaded(options) {
-        nextplease.prefs = options;
-        initDefaultOptions(nextplease.prefs);
-        nextplease.readPreferences(false);
+    function onOptionsLoaded() {
+        nextplease.readPreferences();
         // nextplease.clearStatusBar();
 
         // // no effect if nextplease.clearStatusBarTimer is invalid
@@ -54,19 +53,30 @@
         nextplease.prefetched = {};
         nextplease.unhighlight();
 
-        if (nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Yes) {
+        if (nextplease.prefs.prefetch === nextplease.PREFETCH_ENUM.Yes) {
             nextplease.prefetch();
-        } else if ((nextplease.prefetchPref === nextplease.PREFETCH_ENUM.Smart) && nextplease.gotHereUsingNextplease) {
+        } else if ((nextplease.prefs.prefetch === nextplease.PREFETCH_ENUM.Smart) && nextplease.gotHereUsingNextplease) {
             nextplease.prefetch();
             nextplease.gotHereUsingNextplease = false;
         }
     }
 
-    browser.storage.sync.get(null).then(onOptionsLoaded).catch((e) => {
-        if (e !== "<unavailable>") {
-            nextplease.logError(e);
+    function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(context, args);
+            }, delay);
+        };
+    }
+
+    nextplease.prefs.$loaded.then(onOptionsLoaded);
+    nextplease.prefs.$addObserver(key => {
+        if (key !== "showAdvanced") {
+            debounce(onOptionsLoaded, 250);
         }
-        onOptionsLoaded({});
     });
 
     // TODO use context menus correctly
@@ -79,8 +89,6 @@
     nextplease.MAX_LINKS_TO_CHECK = 1000;
     nextplease.SEARCH_FOR_SUBMIT = 1;
 
-    nextplease.directions = ["Next", "Prev", "First", "Last"];
-
     nextplease.urlsCache = { first: undefined, last: undefined, size: 0, MAX_SIZE: 1000, map: {} };
     nextplease.currentHostName = location.host;
 
@@ -92,7 +100,7 @@
     nextplease.highlighted_old_styles = {};
 
     browser.storage.onChanged.addListener((changes, areaName) => {
-        nextplease.readPreferences(false);
+        nextplease.readPreferences();
     });
 
     nextplease.validateCache = function () {
@@ -198,81 +206,44 @@
         // nextplease.logDetail(nextplease.imageLocationArray.toString());
     };
 
-    nextplease.readPreferences = function (retrying) {
+    nextplease.readPreferences = function () {
         try {
-            // nextplease.logDetail("reading preferences");
+            nextplease.RegExes = {};
 
-            nextplease.useSubmit = nextplease.prefs.allowsubmit;
-            nextplease.useContextMenu = nextplease.prefs.allowcontextmenu;
-            nextplease.useSmartNext = nextplease.prefs.allowsmartnext;
-            nextplease.prefetchPref = nextplease.prefs.prefetch;
-            nextplease.useFrames = nextplease.prefs.checkframes;
+            nextplease.directions.forEach(initRegexFromPref);
+            initRegexFromPref("Gallery");
 
-            var nextRegExString = nextplease.prefs.nextregex;
-            var prevRegExString = nextplease.prefs.prevregex;
-            var firstRegExString = nextplease.prefs.firstregex;
-            var lastRegExString = nextplease.prefs.lastregex;
-
-            var galleryRegExString = nextplease.prefs.galleryregex;
-            var galleryRegEx = new RegExp(galleryRegExString, "i");
-            var matches = galleryRegEx.exec("http://nextplease.mozdev.org/test/test101.jpg");
-            if (!matches || (matches.length !== 4)) {
-                nextplease.logError("Gallery regex test failed!");
-                // TODO get default nextplease.prefs.clearUserPref("galleryregex");
-                galleryRegExString = nextplease.prefs.galleryregex;
-                galleryRegEx = new RegExp(galleryRegExString, "i");
-            }
-
-            nextplease.RegExes = {
-                Next: new RegExp(nextRegExString, "i"),
-                Prev: new RegExp(prevRegExString, "i"),
-                First: new RegExp(firstRegExString, "i"),
-                Last: new RegExp(lastRegExString, "i"),
-                Gallery: galleryRegEx
-            };
-
-            // nextplease.logDetail("regexes read");
-
-            nextplease.ImageMap = {};
-            nextplease.PhraseMap = {};
-
-            // Read the phrases that specify a next link
-            // by reading the preferences or defaults,
-            // and put the phrases in a lookup table.
-            var addPrefsToMap = function (map, phraseOrImage, direction) {
-                var prefName = (direction + phraseOrImage).toLowerCase() + ".expr0";
-                var values = stringArrayFromPref(prefName);
-                // nextplease.logDetail("initializing " + prefbranch);
-                for (var i = 0; i < values.length; i++) {
-                    map[values[i]] = direction;
-                }
-                // nextplease.logDetail("finished initializing " + prefbranch);
-            };
-
-            for (var i = 0; i < nextplease.directions.length; i++) {
-                var direction = nextplease.directions[i];
-                addPrefsToMap(nextplease.PhraseMap, "Phrase", direction);
-                addPrefsToMap(nextplease.ImageMap, "Image", direction);
-            }
-
-            nextplease.highlightColor = nextplease.prefs.highlight ?
-                nextplease.prefs.highlightColor :
-                undefined;
-            nextplease.highlightPrefetchedColor = nextplease.prefs.highlightPrefetched ?
-                nextplease.prefs.highlightPrefetchedColor :
-                undefined;
-
-            nextplease.logDetail("preferences read");
+            initExactMatches("Phrase");
+            initExactMatches("Image");
         } catch (e) {
-            console.error(e);
-            if (!retrying) {
-                nextplease.prefs = {};
-                initDefaultOptions(nextplease.prefs);
-
-                nextplease.notify("readingPreferencesFailed");
-                nextplease.readPreferences(true);
-            }
+            nextplease.logError(e);
         }
+
+        function initRegexFromPref(direction) {
+            let prefKey = direction.toLowerCase() + "regex";
+            let regex = nextplease.prefs[prefKey];
+            try {
+                regex = new RegExp(regex, "i");
+            } catch (e) {
+                nextplease.logError(`nextplease.prefs.${prefKey}="${regex}" is not a regex`);
+                regex = new RegExp(nextplease.prefs.$default[prefKey], "i");
+            }
+            nextplease.RegExes[direction] = regex;
+        }
+
+        // Read the phrases that specify a next link
+        // by reading the preferences or defaults,
+        // and put the phrases in a lookup table.
+        function initExactMatches(phraseOrImage) {
+            let map = {};
+            nextplease.directions.forEach(direction => {
+                let prefName = (direction + phraseOrImage).toLowerCase();
+                let values = stringArrayFromPref(prefName);
+                values.forEach(value => map[value] = direction);
+            });
+            nextplease[phraseOrImage + "Map"] = map;
+        }
+
     };
 
     nextplease.notify = function (messageKey, args = undefined, title = undefined) {
@@ -370,7 +341,6 @@
         var direction1;
 
         var text;
-        var isInt = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/;
 
         var pageNumLinks = { Next: null, Prev: null, First: null, Last: null, Tmp: null };
 
@@ -395,7 +365,8 @@
                 nextplease.prefetched.First && nextplease.prefetched.Last;
         };
 
-        if (nextplease.useSmartNext) {
+        // TODO https://stackoverflow.com/questions/48966898/go-back-forward-in-history-in-webextensions
+        if (nextplease.prefs.allowsmartnext) {
             if (getBrowser().canGoForward) {
                 nextplease.log("forward in history");
                 link = [nextplease.ResultType.History, 1];
@@ -592,7 +563,7 @@
 
         // Otherwise try looking for next/prev submit buttons 
         // if the user allows it.
-        if (nextplease.useSubmit) {
+        if (nextplease.prefs.allowsubmit) {
             temp = nextplease.getForm(direction, prefetching);
             if (temp) { return temp; }
         }
@@ -606,7 +577,7 @@
 
         // None of it worked, so make a recursive call to
         // nextplease.getLink on the frame windows.
-        if (nextplease.useFrames) {
+        if (nextplease.prefs.checkframes) {
             var frames = curWindow.frames, framesNum = frames.length;
             for (j = 0; j < framesNum; j++) {
                 temp = nextplease.getLink(frames[j], direction);
@@ -751,8 +722,8 @@
     };
 
     nextplease.openResult = function (curWindow, result) {
-        if (nextplease.highlightColor) {
-            nextplease.highlight(result, nextplease.highlightColor);
+        if (nextplease.highlight) {
+            nextplease.highlight(result, nextplease.prefs.highlightColor);
         }
 
         switch (result[0]) {
@@ -799,7 +770,6 @@
     // that link.
     nextplease.openNumberedLink = function (curWindow, linkNum) {
         var text;
-        var isInt = /^\s*\[?\s*(\d+)\s*\]?\s*$/;
         var i, j;
 
         nextplease.logDetail("looking for a link numbered " + linkNum);
@@ -822,7 +792,7 @@
             }
         }
 
-        if (nextplease.useFrames) {
+        if (nextplease.prefs.checkframes) {
             var frames = curWindow.frames;
             for (j = 0; j < frames.length; j++) {
                 if (nextplease.openNumberedLink(frames[j], linkNum)) { return true; }
@@ -865,11 +835,12 @@
 
     nextplease.prefetch = function () {
         nextplease.getLink(window, "Prefetch");
-        if (nextplease.highlightPrefetchedColor) {
-            nextplease.highlight(nextplease.prefetched.Next, nextplease.highlightPrefetchedColor);
-            nextplease.highlight(nextplease.prefetched.Prev, nextplease.highlightPrefetchedColor);
-            nextplease.highlight(nextplease.prefetched.First, nextplease.highlightPrefetchedColor);
-            nextplease.highlight(nextplease.prefetched.Last, nextplease.highlightPrefetchedColor);
+        if (nextplease.highlightPrefetched) {
+            let color = nextplease.prefs.highlightPrefetchedColor;
+            nextplease.highlight(nextplease.prefetched.Next, color);
+            nextplease.highlight(nextplease.prefetched.Prev, color);
+            nextplease.highlight(nextplease.prefetched.First, color);
+            nextplease.highlight(nextplease.prefetched.Last, color);
         }
     };
 
@@ -1026,25 +997,20 @@
         }
     };
 
-    nextplease.addToPrefs = function (prefbranch, text) {
-        nextplease.logDetail(`adding ${text} to ${prefbranch}`);
-        var prefname = prefbranch + ".expr0";
+    nextplease.addToPrefs = function (prefname, text) {
         var prefvalue = nextplease.prefs[prefname];
         var resultprefvalue = prefvalue + "|" + text.replace(/\|/g, "&pipe;");
 
         nextplease.prefs[prefname] = resultprefvalue;
-        browser.storage.sync.set({[prefname]: resultprefvalue});
     };
 
-    nextplease.removeFromPrefs = function (prefbranch, text) {
-        nextplease.logDetail(`removing ${text} from ${prefbranch}`);
-        var tempprefname = prefbranch + ".expr0";
-        var prefvalue = nextplease.prefs[tempprefname];
+    nextplease.removeFromPrefs = function (prefname, text) {
+        nextplease.logDetail(`removing ${text} from ${prefname}`);
+        var prefvalue = nextplease.prefs[prefname];
         var text1 = new RegExp("\\|" + text.replace(/\|/g, "&pipe;") + "(?=\\||$)", "g");
         var resultprefvalue = prefvalue.replace(text1, "");
 
-        nextplease.prefs[tempprefname] = resultprefvalue;
-        browser.storage.sync.set({[tempprefname]: resultprefvalue});
+        nextplease.prefs[prefname] = resultprefvalue;
     };
 
     // TODO add way to enter number in the popup and react here

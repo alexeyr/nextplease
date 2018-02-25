@@ -107,6 +107,9 @@
     "invalidAlreadyPresent": {
         "message": "Already listed"
     },
+    "invalidGallery": {
+        "message": "Wrong result on example URL"
+    },
     "optionsImageUrls": {
         "message": "Image URLs"
     },
