@@ -11,6 +11,8 @@
 
     const isInt = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/;
 
+    nextplease.prefetched = {};
+
     nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
         var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
         var removeConfirmationText =
