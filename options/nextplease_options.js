@@ -97,12 +97,6 @@
         function addValue() {
             appendOption(listbox[0], addTextbox.val());
             setPrefFromUI(listbox[0]);
-            // Why doesn't this work?
-            // listbox.find("option:last")[0].scrollIntoView();
-            // Working code from https://stackoverflow.com/a/7205792/9204
-            let optionTop = listbox.find("option:last").offset().top;
-            let listTop = listbox.offset().top;
-            listbox.scrollTop(listbox.scrollTop() + optionTop - listTop);
         }
 
         listbox.change(function () {
@@ -226,13 +220,30 @@
     }
 
     function showListPref(listbox) {
-        $(listbox).children("option").remove();
+        let jqListbox = $(listbox);
+        let scrollTop = jqListbox.scrollTop();
+        jqListbox.children("option").remove();
 
-        var values = stringArrayFromPref(listbox.pref);
+        let values = stringArrayFromPref(listbox.pref);
+        let oldValueCount = listbox.valueCount || 0;
+        let newValueCount = values.length;
+
         listbox.values = [];
-        for (var i = 0; i < values.length; i++) {
-            appendOption(listbox, values[i]);
+        values.forEach(value => appendOption(listbox, value));
+
+        // if new values were added, scroll to bottom to show them
+        if (newValueCount > oldValueCount) {
+            // Why doesn't this work?
+            // listbox.find("option:last")[0].scrollIntoView();
+            // Working code from https://stackoverflow.com/a/7205792/9204
+            let optionTop = jqListbox.find("option:last").offset().top;
+            let listTop = jqListbox.offset().top;
+            jqListbox.scrollTop(jqListbox.scrollTop() + optionTop - listTop);
+        } else {
+            // if values were removed, go back to initial scroll position
+            jqListbox.scrollTop(scrollTop);
         }
+        listbox.valueCount = newValueCount;
     }
 
     $("#restoreAll").click(function () {
