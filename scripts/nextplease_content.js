@@ -572,11 +572,13 @@
             if (temp) { return temp; }
         }
 
-        // See if we can increment the URL to get to next/prev/first
-        var galleryURL = nextplease.getGalleryNumberURL(curWindow, direction);
-        // alert(galleryURL);
-        // alert(nextplease.imageLocationArray.length);
-        if (galleryURL && !prefetching) { return [nextplease.ResultType.URL, galleryURL]; }
+        if (!prefetching) {
+            // See if we can increment the URL to get to next/prev/first
+            const galleryURL = nextplease.getGalleryNumberURL(curWindow, direction);
+            if (galleryURL) {
+                return [nextplease.ResultType.URL, galleryURL];
+            }
+        }
 
         // None of it worked, so make a recursive call to
         // nextplease.getLink on the frame windows.
@@ -592,73 +594,65 @@
 
     nextplease.getGalleryNumberURL = function (curWindow, direction) {
         nextplease.logDetail("trying to change the URL by a suitable number");
-        var i;
-        // alert(nextplease.imageLocationArray);
-        var matches = nextplease.RegExes.Gallery && nextplease.RegExes.Gallery.exec(decodeURI(curWindow.location.href));
-        var prefixUrl, suffixUrl, numberUrlPartLength, curNumber, urlNumber, padStr, linkUrl;
-        var urlsCache = nextplease.urlsCache;
+        const matches = nextplease.RegExes.Gallery && nextplease.RegExes.Gallery.exec(decodeURI(curWindow.location.href));
 
         if (matches && (matches.length === 4)) {
-            prefixUrl = matches[1];
-            numberUrlPartLength = matches[2].length;
-            suffixUrl = matches[3];
+            const prefixUrl = matches[1];
+            const numberUrlPartLength = matches[2].length;
+            const suffixUrl = matches[3];
             nextplease.logDetail("URL prefix is " + prefixUrl + ", URL suffix is " + suffixUrl);
 
             const MAX_GALLERY_GAP = 20;
 
+            var curNumber, urlNumber, linkUrl;
+
+            function makeLinkUrl() {
+                var padStr = "" + urlNumber;
+                var padLen = numberUrlPartLength - padStr.length;
+                for (let i = 0; i < padLen; i++) {
+                    padStr = "0" + padStr;
+                }
+                return prefixUrl + padStr + suffixUrl;
+            }
+
             if (direction === "Next") {
                 curNumber = parseInt(matches[2], 10);
-                for (i = 1; i < MAX_GALLERY_GAP; i++) {
+                for (let i = 1; i < MAX_GALLERY_GAP; i++) {
                     urlNumber = curNumber + i;
-                    padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
-                    linkUrl = prefixUrl + padStr + suffixUrl;
-                    if (urlsCache.map[linkUrl]) {
+                    linkUrl = makeLinkUrl();
+                    if (nextplease.urlsCache.map[linkUrl]) {
                         nextplease.log("gallery URL found: " + linkUrl);
                         return linkUrl;
                     }
                 }
                 urlNumber = curNumber + 1;
-                padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
-                linkUrl = prefixUrl + padStr + suffixUrl;
+                linkUrl = makeLinkUrl();
                 return linkUrl;
             } else if (direction === "Prev") {
                 curNumber = parseInt(matches[2], 10);
                 var maxToSubtract = Math.min(curNumber, MAX_GALLERY_GAP);
-                for (i = 1; i <= maxToSubtract; i++) {
+                for (let i = 1; i <= maxToSubtract; i++) {
                     urlNumber = curNumber - i;
-                    padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
-                    linkUrl = prefixUrl + padStr + suffixUrl;
-                    if (urlsCache.map[linkUrl]) {
+                    linkUrl = makeLinkUrl();
+                    if (nextplease.urlsCache.map[linkUrl]) {
                         nextplease.log("gallery URL found: " + linkUrl);
                         return linkUrl;
                     }
                 }
                 urlNumber = curNumber - 1;
                 if (urlNumber >= 0) {
-                    padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
-                    linkUrl = prefixUrl + padStr + suffixUrl;
+                    linkUrl = makeLinkUrl();
                     nextplease.log("gallery URL found: " + linkUrl);
                     return linkUrl;
                 }
             } else if (direction === "First") {
                 urlNumber = 1;
-                padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
-                linkUrl = prefixUrl + padStr + suffixUrl;
+                linkUrl = makeLinkUrl();
                 nextplease.log("gallery URL found: " + linkUrl);
                 return linkUrl;
             }
         }
         return undefined;
-    };
-
-    nextplease.padNumber = function (length, newNum) {
-        var padStr = "" + newNum;
-        var padLen = length - padStr.length;
-        var i;
-        for (i = 0; i < padLen; i++) {
-            padStr = "0" + padStr;
-        }
-        return padStr;
     };
 
     nextplease.openResult = function (curWindow, result) {
