@@ -312,7 +312,6 @@
     // pages with frames.
     nextplease.getLink = function (curWindow, direction) {
         var doc = curWindow.document;
-        var i, j;
         var prefetching = (direction === "Prefetch");
 
         var direction1;
@@ -344,7 +343,7 @@
             nextplease.logDetail("checking <link> tags");
             var linktags = doc.getElementsByTagName("link"), linktagsNum = linktags.length;
 
-            for (i = 0; i < linktagsNum; i++) {
+            for (let i = 0; i < linktagsNum; i++) {
                 link = linktags[i];
 
                 direction1 = nextplease.directionFromRel(link);
@@ -365,7 +364,7 @@
         var curWindowUrl = doc.location.href;
 
         // Search through each link
-        for (i = 0; i < alinksNum; i++) {
+        for (let i = 0; i < alinksNum; i++) {
             link = alinks[i];
             if (link.href === curWindowUrl) {
                 continue;
@@ -405,7 +404,6 @@
             if (imgElems.length > 0) {
                 nextplease.logDetail("checking images inside <a>...</a>");
                 // If the image matches, go to the URL.
-                //nextplease.logDetail(imgElems[0].src);
                 direction1 = nextplease.directionFromImage(imgElems[0], direction, prefetching);
                 if (direction === direction1) {
                     return [nextplease.ResultType.Link, link];
@@ -499,7 +497,7 @@
 
         // Try to find a match using our number algorithm
         if (prefetching) {
-            for (i = 0; i < nextplease.directions.length; i++) {
+            for (let i = 0; i < nextplease.directions.length; i++) {
                 direction1 = nextplease.directions[i];
                 if (!nextplease.prefetched[direction1] && pageNumLinks[direction1]) {
                     nextplease.prefetched[direction1] = [nextplease.ResultType.Link, pageNumLinks[direction1]];
@@ -583,8 +581,8 @@
         // None of it worked, so make a recursive call to
         // nextplease.getLink on the frame windows.
         if (nextplease.prefs.checkframes) {
-            var frames = curWindow.frames, framesNum = frames.length;
-            for (j = 0; j < framesNum; j++) {
+            const frames = curWindow.frames, framesNum = frames.length;
+            for (let j = 0; j < framesNum; j++) {
                 temp = nextplease.getLink(frames[j], direction);
                 if (temp) { return temp; }
             }
