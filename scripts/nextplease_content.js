@@ -763,10 +763,11 @@
         nextplease.getLink(window, "Prefetch");
         if (nextplease.prefs.highlightPrefetched) {
             const color = nextplease.prefs.highlightPrefetchedColor;
-            nextplease.highlight(nextplease.prefetched.Next, color);
-            nextplease.highlight(nextplease.prefetched.Prev, color);
-            nextplease.highlight(nextplease.prefetched.First, color);
-            nextplease.highlight(nextplease.prefetched.Last, color);
+            for (const direction of nextplease.directions) {
+                if (nextplease.prefetched[direction]) {
+                    nextplease.highlight(nextplease.prefetched[direction], color);
+                }
+            }
         }
     };
 
@@ -798,14 +799,12 @@
     };
 
     nextplease.unhighlight = function () {
-        var element;
-        for (element in nextplease.highlighted_old_styles) {
+        for (const element in nextplease.highlighted_old_styles) {
             element.style = nextplease.highlighted_old_styles[element];
             delete nextplease.highlighted_old_styles[element];
         }
     };
 
-    // TODO add way to enter number in the popup and react here
     nextplease.linkNumber = 0;
 
     nextplease.handleNumberShortcut = function (digit) {
