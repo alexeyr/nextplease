@@ -86,10 +86,6 @@
 
     nextplease.gotHereUsingNextplease = false;
 
-    nextplease.MAX_LINK_NUM = 1000;
-    nextplease.MAX_GALLERY_GAP = 20;
-    nextplease.MAX_LINKS_TO_CHECK = 1000;
-
     nextplease.urlsCache = { first: undefined, last: undefined, size: 0, MAX_SIZE: 1000, map: {} };
     nextplease.currentHostName = location.host;
 
@@ -166,9 +162,11 @@
 
         var start = new Date();
 
+        const MAX_LINKS_TO_CHECK = 1000;
+
         var imgElems = theDocument.getElementsByTagName("img"), imgElemsNum = imgElems.length;
         if (imgElems) {
-            var numberOfImagesToCheck = Math.min(nextplease.MAX_LINKS_TO_CHECK, imgElemsNum);
+            var numberOfImagesToCheck = Math.min(MAX_LINKS_TO_CHECK, imgElemsNum);
             nextplease.logDetail("Checking " + numberOfImagesToCheck + " <img> elements out of " + imgElemsNum + " total.");
             for (i = 0; i < numberOfImagesToCheck; i++) {
                 nextplease.addToCache(imgElems[i].src);
@@ -177,7 +175,7 @@
 
         var links = theDocument.getElementsByTagName("a"), linksNum = links.length;
         if (links) {
-            var numberOfLinksToCheck = Math.min(nextplease.MAX_LINKS_TO_CHECK, linksNum);
+            var numberOfLinksToCheck = Math.min(MAX_LINKS_TO_CHECK, linksNum);
             nextplease.logDetail("Checking " + numberOfLinksToCheck + " <a> elements out of " + linksNum + " total.");
             for (i = 0; i < numberOfLinksToCheck; i++) {
                 var linkUrl = links[i].href;
@@ -341,7 +339,10 @@
         var pageNumLinks = { Next: null, Prev: null, First: null, Last: null, Tmp: null };
 
         var firstPageNum;
-        var tmpPageNum = 100000; // Init to arbitrarily large num
+
+        const MAX_LINK_NUM = 10000;
+
+        var tmpPageNum = MAX_LINK_NUM;
         var insideNumberBlock = false;
 
         var link;
@@ -436,12 +437,12 @@
             var intMatches = isInt.exec(text);
             if (intMatches) {
                 var linkPageNum = parseInt(intMatches[1], 10);
-                // If the number is greater than nextplease.MAX_LINK_NUM
+                // If the number is greater than MAX_LINK_NUM
                 // and doesn't follow smaller numbers
                 // it probably doesn't have anything to do with
                 // a next/prev link.
                 //    nextplease.logDetail(linkPageNum);
-                if (insideNumberBlock || (linkPageNum < nextplease.MAX_LINK_NUM)) {
+                if (insideNumberBlock || (linkPageNum < MAX_LINK_NUM)) {
                     nextplease.logDetail("found link number " + linkPageNum + ", checking...");
                     // Try to figure out what the current page and
                     // next/prev links are for pages that just have
@@ -566,9 +567,12 @@
             numberUrlPartLength = matches[2].length;
             suffixUrl = matches[3];
             nextplease.logDetail("URL prefix is " + prefixUrl + ", URL suffix is " + suffixUrl);
+
+            const MAX_GALLERY_GAP = 20;
+
             if (direction === "Next") {
                 curNumber = parseInt(matches[2], 10);
-                for (i = 1; i < nextplease.MAX_GALLERY_GAP; i++) {
+                for (i = 1; i < MAX_GALLERY_GAP; i++) {
                     urlNumber = curNumber + i;
                     padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
                     linkUrl = prefixUrl + padStr + suffixUrl;
@@ -583,7 +587,7 @@
                 return linkUrl;
             } else if (direction === "Prev") {
                 curNumber = parseInt(matches[2], 10);
-                var maxToSubtract = Math.min(curNumber, nextplease.MAX_GALLERY_GAP);
+                var maxToSubtract = Math.min(curNumber, MAX_GALLERY_GAP);
                 for (i = 1; i <= maxToSubtract; i++) {
                     urlNumber = curNumber - i;
                     padStr = nextplease.padNumber(numberUrlPartLength, urlNumber);
