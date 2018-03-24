@@ -9,8 +9,8 @@ function listenForClicks() {
                 browser.runtime.openOptionsPage();
             } else {
                 browser.tabs.sendMessage(active_tab.id, {
-                    command: command
-                });    
+                    direction: command
+                });
             }
         }).catch(reportExecuteScriptError);
     });

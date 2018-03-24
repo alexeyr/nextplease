@@ -9,21 +9,18 @@
 
 <body>
     <div id="popup-content">
-        <div class="icons">
+        <div id="directions" class="icons">
             <div id="First" title="Go to first page"></div>
             <div id="Prev" title="Go to previous page"></div>
             <div id="Next" title="Go to next page"></div>
             <div id="Last" title="Go to last page"></div>
         </div>
-        <!-- TODO Add command -->
-        <!-- TODO Add data-i18n -->
-        <div class="gotopage">Page # <input type="text" id="PageNum" style="width: 50px;"><input type="button" value="Go!"></div>
-        <div id="Options" class="button" data-i18n="OptionsPage">Options</div>
-        <!--<div id="First" class="button" data-i18n="FirstPageCommand">First</div>
-        <div id="Prev" class="button" data-i18n="PrevPageCommand">Prev</div>
-        <div id="Next" class="button" data-i18n="NextPageCommand">Next</div>
-        <div id="Last" class="button" data-i18n="LastPageCommand">Last</div>
-        <div id="Options" class="button" data-i18n="OptionsPage">Options</div>-->
+        <div class="gotopage">
+            <label for="PageNum" data-i18n="pageNumLabel"></label>
+            <input type="text" id="PageNum" style="width: 3em;">
+            <input type="button" data-i18n="pageNumGo">
+        </div>
+        <!-- <input id="Options" type="button" data-i18n="OptionsPage"></input> -->
     </div>
     <div id="error-content" class="hidden">
         <p data-i18n="popupError">Can't find desired link.</p>

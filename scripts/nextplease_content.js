@@ -35,11 +35,12 @@
     
     // Listen for messages from the popup and from commands
     browser.runtime.onMessage.addListener((message) => {
-        // TODO handle number shortcuts when commands are added
-        if (typeof message.command === "number") {
-            nextplease.openNumberedLink(window, message.command);
-        } else {
-            nextplease.openDirection(message.command);
+        if (message.direction) {
+            nextplease.openDirection(message.direction);
+        } else if (message.number) {
+            nextplease.openNumberedLink(window, message.number);
+        } else if (message.digit) {
+            nextplease.handleNumberShortcut(message.digit);
         }
     });
 
@@ -1028,7 +1029,7 @@
         // nextplease.showInStatusBar(
         //     browser.i18n.getMessage("lookingForNumberedLink", [nextplease.linkNumber]));
 
-        nextplease.NumberShortcutTimer = setTimeout(nextplease.finishNumberShortcut, 500);
+        nextplease.NumberShortcutTimer = setTimeout(nextplease.finishNumberShortcut, nextplease.prefs.digitDelay);
     };
 
     nextplease.finishNumberShortcut = function () {

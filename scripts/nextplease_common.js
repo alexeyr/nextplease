@@ -7,6 +7,8 @@ nextplease.prefs = new Configs({
     allowcontextmenu: true,
     allowsmartnext: false,
     checkframes: true,
+    // TODO add to options.html
+    digitDelay: 500,
 
     prefetch: 2,
 

@@ -214,5 +214,11 @@
     },
     "optionsPage": {
         "message": "Options"
+    },
+    "pageNumLabel": {
+        "message": "Page # "
+    },
+    "pageNumGo": {
+        "message": "Go!"
     }
 }

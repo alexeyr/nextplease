@@ -1,66 +1,54 @@
-html, body {
+html,
+body {
     width: 100pt;
-  }
-  
-  .hidden {
+    margin-bottom: 5px;
+}
+
+.hidden {
     display: none;
-  }
-  
-  .icons {
-    width:80px;
+}
+
+.icons {
+    width: 80px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 5pt;
     margin-bottom: 25pt;
 }
 
-  .gotopage {
+.gotopage {
     clear: both;
     text-align: center;
-   }
+}
 
-  .button {
-    margin: 3% auto;
-    padding: 4px;
-    text-align: center;
-    font-size: 1.5em;
-    cursor: pointer;
-    background-color: #E5F2F2;
-    clear: both;
-  }
-  
-  .button:hover {
-    background-color: #CFF2F2;
-  }
-
-  #First {
+#First {
     background-image: url(../icons/first.png);
     cursor: pointer;
     width: 20px;
     height: 20px;
     float: left;
-  }
+}
 
-  #Prev {
+#Prev {
     background-image: url(../icons/prev.png);
     cursor: pointer;
     width: 20px;
     height: 20px;
     float: left;
-  }
+}
 
-  #Next {
+#Next {
     background-image: url(../icons/next.png);
     cursor: pointer;
     width: 20px;
     height: 20px;
     float: left;
-  }
+}
 
-  #Last {
+#Last {
     background-image: url(../icons/last.png);
     cursor: pointer;
     width: 20px;
     height: 20px;
     float: left;
-  }
+}
