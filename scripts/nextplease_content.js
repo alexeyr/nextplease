@@ -456,14 +456,11 @@
                         nextplease.logDetail("New number block started");
                         insideNumberBlock = true;
                         //    alert(linkPageNum);
-                        pageNumLinks.First = link;
                         firstPageNum = linkPageNum;
 
+                        pageNumLinks.First = link;
                         pageNumLinks.Prev = null;
                         pageNumLinks.Next = null;
-                        pageNumLinks.Last = null;
-
-                        pageNumLinks.First = link;
                         pageNumLinks.Last = null;
                     } else if (tmpPageNum + 1 === linkPageNum) {
                         nextplease.logDetail("next link in number block");
@@ -527,7 +524,9 @@
                 }
             }
             if (finishPrefetch()) { return true; }
-        } else if (pageNumLinks[direction]) { return [nextplease.ResultType.Link, pageNumLinks[direction]]; }
+        } else if (pageNumLinks[direction]) {
+            return [nextplease.ResultType.Link, pageNumLinks[direction]];
+        }
 
         // Otherwise try looking for next/prev submit buttons 
         // if the user allows it.
