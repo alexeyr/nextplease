@@ -35,6 +35,8 @@
     
     // Listen for messages from the popup and from commands
     browser.runtime.onMessage.addListener((message) => {
+        nextplease.log(`Handling message ${JSON.stringify(message)}`);
+
         if (message.direction) {
             nextplease.openDirection(message.direction);
         } else if (message.number) {
@@ -249,17 +251,8 @@
 
     };
 
-    nextplease.notify = function (messageKey, args = undefined, title = undefined) {
-        let localizedTitle = title ? browser.i18n.getMessage(title) : "";
-        browser.notifications.create({
-            type: "basic",
-            title: localizedTitle,
-            message: browser.i18n.getMessage(messageKey, args || [])
-        });
-    };
-
     nextplease.notifyLinkNotFound = function () {
-        nextplease.notify("linkNotFound");
+        nextplease.notify({messageKey: "linkNotFound"});
     };
 
     nextplease.directionFromRel = function (link) {

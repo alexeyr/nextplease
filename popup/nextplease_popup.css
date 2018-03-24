@@ -21,6 +21,13 @@ body {
     text-align: center;
 }
 
+input,
+label,
+select,
+button {
+    vertical-align: middle;
+}
+
 #First {
     background-image: url(../icons/first.png);
     cursor: pointer;

@@ -64,3 +64,25 @@ function stringArrayFromPref(prefName) {
 }
 
 nextplease.directions = ["Next", "Prev", "First", "Last"];
+
+nextplease.notify = function (input) {
+    if (browser.notifications) {
+        const { messageKey, messageArgs, titleKey = "extensionName", titleArgs, timeout = 3000, id = undefined } = input;
+        const title = browser.i18n.getMessage(titleKey, titleArgs);
+        const message = browser.i18n.getMessage(messageKey, messageArgs);
+        const options = {
+            type: "basic",
+            title: title,
+            message: message
+        };
+        const promise = browser.notifications.create(id, options);
+        if (timeout > 0) {
+            console.log(timeout);
+            promise.then((id) => {
+                setTimeout(() => browser.notifications.clear(id), timeout);
+            });
+        }
+    } else {
+        browser.runtime.sendMessage({notification: input});
+    }
+};

@@ -9,4 +9,10 @@
             });
         }).catch(nextplease.logError);
     });
+
+    browser.runtime.onMessage.addListener((message) => {
+        if (message.notification) {
+            nextplease.notify(message.notification);
+        }
+    });
 })();

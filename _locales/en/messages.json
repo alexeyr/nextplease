@@ -220,5 +220,11 @@
     },
     "pageNumGo": {
         "message": "Go!"
+    },
+    "pageNumErrorTitle": {
+        "message": "Illegal page number"
+    },
+    "pageNumErrorMsg": {
+        "message": "\"$1\" is not a number"
     }
 }
