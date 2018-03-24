@@ -687,7 +687,7 @@
     };
 
     nextplease.openResult = function (curWindow, result) {
-        if (nextplease.highlight) {
+        if (nextplease.prefs.highlight) {
             nextplease.highlight(result, nextplease.prefs.highlightColor);
         }
 
@@ -796,8 +796,8 @@
 
     nextplease.prefetch = function () {
         nextplease.getLink(window, "Prefetch");
-        if (nextplease.highlightPrefetched) {
-            let color = nextplease.prefs.highlightPrefetchedColor;
+        if (nextplease.prefs.highlightPrefetched) {
+            const color = nextplease.prefs.highlightPrefetchedColor;
             nextplease.highlight(nextplease.prefetched.Next, color);
             nextplease.highlight(nextplease.prefetched.Prev, color);
             nextplease.highlight(nextplease.prefetched.First, color);
