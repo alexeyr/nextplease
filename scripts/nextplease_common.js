@@ -8,7 +8,7 @@ nextplease.prefs = new Configs({
     // TODO add to options.html
     digitDelay: 1000,
 
-    prefetch: 2,
+    prefetch: "smart",
 
     nextregex: "^next(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
     prevregex: "^((<{0,2})|«|<|[\u25C0-\u25C5]|\u2190|\u219E)\\s*((prev(ious)?(\\s+\\d+)?(\\s+\\w+)?)|back)\\s*$",

@@ -54,9 +54,10 @@
         nextplease.prefetched = {};
         nextplease.unhighlight();
 
-        if (nextplease.prefs.prefetch === nextplease.PREFETCH_ENUM.Yes) {
+        const prefetch = nextplease.prefs.prefetch;
+        if (prefetch === "yes") {
             nextplease.prefetch();
-        } else if ((nextplease.prefs.prefetch === nextplease.PREFETCH_ENUM.Smart) && nextplease.gotHereUsingNextplease) {
+        } else if ((prefetch === "smart") && nextplease.gotHereUsingNextplease) {
             nextplease.prefetch();
             nextplease.gotHereUsingNextplease = false;
         }
@@ -92,8 +93,6 @@
 
     nextplease.SEARCH_TYPE = { Next: 1, Prev: 2, First: 3, Last: 4 };
     nextplease.ResultType = { Link: 0, URL: 1, Input: 2, History: 3 };
-
-    nextplease.PREFETCH_ENUM = { No: 0, Yes: 1, Smart: 2 };
 
     nextplease.highlighted_old_styles = {};
 
@@ -340,12 +339,6 @@
         var link;
 
         var temp;
-
-        if (prefetching) {
-            nextplease.logDetail("prefetching...");
-        } else {
-            nextplease.logDetail("looking for a link...");
-        }
 
         var range = doc.createRange();
 
@@ -795,6 +788,7 @@
     };
 
     nextplease.prefetch = function () {
+        nextplease.log("Prefetching");
         nextplease.getLink(window, "Prefetch");
         if (nextplease.prefs.highlightPrefetched) {
             const color = nextplease.prefs.highlightPrefetchedColor;
