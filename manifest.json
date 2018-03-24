@@ -119,7 +119,9 @@
     "permissions": [
         "activeTab",
         "storage",
-        "notifications"
+        "notifications",
+        "contextMenus",
+        "<all_urls>"
     ],
 
     "background": {

@@ -13,17 +13,11 @@
     "noWhitespacePhrases": {
         "message": "Trying to add whitespace string."
     },
-    "addPhraseContextMenu": {
-        "message": "Use text for $1"
-    },
-    "addImageContextMenu": {
-        "message": "Use image for $1"
+    "useContextMenu": {
+        "message": "Use for $1"
     },
     "removePhraseContextMenu": {
-        "message": "Don't use the phrase for $1"
-    },
-    "removeImageContextMenu": {
-        "message": "Don't use the image for $1"
+        "message": "Don't use for $1"
     },
     "PhraseAlreadyUsed": {
         "message": "The text \"$1\" is already used for $2."
@@ -148,9 +142,6 @@
     },
     "optionsEnableSubmit": {
         "message": "Search for HTML submit buttons"
-    },
-    "optionsEnableContextMenu": {
-        "message": "Enable right-click (context) menu items"
     },
     "optionsSmartNext": {
         "message": "Enable smart forward-or-next/back-or-previous behavior"

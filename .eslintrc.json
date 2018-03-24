@@ -30,8 +30,7 @@
         "ShortcutCustomizeUI": true,
         "Configs": true,
         "stringArrayFromPref": true,
-        "getBrowser": false, // FIXME
-        "gContextMenu": false // FIXME
+        "getBrowser": false // FIXME
     },
     "parserOptions": {
         "ecmaVersion": 2017

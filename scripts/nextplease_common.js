@@ -4,7 +4,6 @@ var nextplease = {};
 nextplease.prefs = new Configs({
     allowsubmit: false,
     allownumbershortcuts: true,
-    allowcontextmenu: true,
     allowsmartnext: false,
     checkframes: true,
     // TODO add to options.html
