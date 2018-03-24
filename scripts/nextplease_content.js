@@ -12,6 +12,9 @@
     const isInt = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/;
 
     nextplease.prefetched = {};
+    for (const key of ["PhraseMap", "ImageMap", "RegExes"]) {
+        nextplease[key] = nextplease.key || {};
+    }
 
     nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
         var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
@@ -269,6 +272,11 @@
     };
 
     nextplease.directionFromText = function (text, direction, prefetching) {
+        function testRegex(direction) {
+            const regex = nextplease.RegExes[direction];
+            return regex && regex.test(text);
+        }
+
         if (text) {
             text = text.toLowerCase();
             var direction1 = nextplease.PhraseMap[text];
@@ -279,14 +287,16 @@
                 if (prefetching) {
                     for (let i = 0; i < nextplease.directions.length; i++) {
                         var direction2 = nextplease.directions[i];
-                        if (!nextplease.prefetched[direction2] && nextplease.RegExes[direction2].test(text)) {
+                        if (!nextplease.prefetched[direction2] && testRegex(direction2)) {
                             nextplease.log(`found regex match for "${text}"`);
                             return direction2;
                         }
                     }
-                } else if (nextplease.RegExes[direction].test(text)) {
-                    nextplease.log(`found regex match for "${text}"`);
-                    return direction;
+                } else {
+                    if (testRegex(direction)) {
+                        nextplease.log(`found regex match for "${text}"`);
+                        return direction;
+                    }
                 }
             }
         }
@@ -549,7 +559,7 @@
         nextplease.logDetail("trying to change the URL by a suitable number");
         var i;
         // alert(nextplease.imageLocationArray);
-        var matches = nextplease.RegExes.Gallery.exec(decodeURI(curWindow.location.href));
+        var matches = nextplease.RegExes.Gallery && nextplease.RegExes.Gallery.exec(decodeURI(curWindow.location.href));
         var prefixUrl, suffixUrl, numberUrlPartLength, curNumber, urlNumber, padStr, linkUrl;
         var urlsCache = nextplease.urlsCache;
 
