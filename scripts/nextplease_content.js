@@ -89,12 +89,10 @@
     nextplease.MAX_LINK_NUM = 1000;
     nextplease.MAX_GALLERY_GAP = 20;
     nextplease.MAX_LINKS_TO_CHECK = 1000;
-    nextplease.SEARCH_FOR_SUBMIT = 1;
 
     nextplease.urlsCache = { first: undefined, last: undefined, size: 0, MAX_SIZE: 1000, map: {} };
     nextplease.currentHostName = location.host;
 
-    nextplease.SEARCH_TYPE = { Next: 1, Prev: 2, First: 3, Last: 4 };
     nextplease.ResultType = { Link: 0, URL: 1, Input: 2, History: 3 };
 
     nextplease.highlighted_old_styles = {};
@@ -304,8 +302,6 @@
     };
 
     nextplease.directionFromImage = function (imageElem, direction, prefetching) {
-        var imgtext = imageElem.alt ? imageElem.alt : imageElem.title;
-
         var direction1 = nextplease.ImageMap[imageElem.src];
         if (direction1) {
             nextplease.log("found image match with URL " + imageElem.src);
@@ -315,6 +311,8 @@
                 return undefined;
             }
         } else {
+            const imgtext = imageElem.alt || imageElem.title;
+
             return nextplease.directionFromText(imgtext, direction, prefetching);
         }
     };
