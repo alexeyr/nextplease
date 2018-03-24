@@ -16,26 +16,6 @@
         nextplease[key] = nextplease.key || {};
     }
 
-    nextplease.confirmRemove = function (phraseOrImage, textOrUrl, currentDirection) {
-        var removeConfirmationKey = "remove" + phraseOrImage + "Confirmation";
-        var removeConfirmationText =
-            browser.i18n.getMessage(
-                removeConfirmationKey,
-                [textOrUrl, nextplease.getDirectionString(currentDirection)]);
-        return window.confirm(removeConfirmationText);
-    };
-    
-    nextplease.confirmReplace = function (phraseOrImage, textOrUrl, currentDirection, newDirection) {
-        var replaceConfirmationKey = "replace" + phraseOrImage + "Confirmation";
-        var replaceConfirmationText =
-            browser.i18n.getMessage(
-                replaceConfirmationKey,
-                [textOrUrl,
-                    nextplease.getDirectionString(currentDirection),
-                    nextplease.getDirectionString(newDirection)]);
-        return window.confirm(replaceConfirmationText);
-    };
-    
     // Listen for messages from the popup and from commands
     browser.runtime.onMessage.addListener((message) => {
         nextplease.log(`Handling message ${JSON.stringify(message)}`);
@@ -778,26 +758,6 @@
         }
     };
 
-    nextplease.openNextLink = function () {
-        nextplease.logDetail("Looking for next link");
-        return nextplease.openDirection("Next");
-    };
-
-    nextplease.openPrevLink = function () {
-        nextplease.logDetail("Looking for prev link");
-        return nextplease.openDirection("Prev");
-    };
-
-    nextplease.openFirstLink = function () {
-        nextplease.logDetail("Looking for first link");
-        return nextplease.openDirection("First");
-    };
-
-    nextplease.openLastLink = function () {
-        nextplease.logDetail("Looking for last link");
-        return nextplease.openDirection("Last");
-    };
-
     nextplease.prefetch = function () {
         nextplease.log("Prefetching");
         nextplease.getLink(window, "Prefetch");
@@ -809,12 +769,6 @@
             nextplease.highlight(nextplease.prefetched.Last, color);
         }
     };
-
-    // old names retained because of http://www.mousegestures.org/exchange/details.php?mappingID=295
-    nextplease.getNextLink = nextplease.openNextLink;
-    nextplease.getPrevLink = nextplease.openPrevLink;
-    nextplease.getFirstLink = nextplease.openFirstLink;
-    nextplease.getLastLink = nextplease.openLastLink;
 
     nextplease.highlight = function (result, color) {
         if (result) {
