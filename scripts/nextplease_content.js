@@ -9,7 +9,10 @@
     }
     window.hasRun = true;
 
-    const isInt = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/;
+    function getLinkNumber(text) {
+        const intMatches = /^\s*\[?\s*(\d+)\s*,?\]?\s*$/.exec(text);
+        return intMatches ? parseInt(intMatches[1], 10) : undefined;
+    }
 
     nextplease.prefetched = {};
     for (const key of ["PhraseMap", "ImageMap", "RegExes"]) {
@@ -414,9 +417,8 @@
 
             if (finishPrefetch()) { return true; }
 
-            var intMatches = isInt.exec(text);
-            if (intMatches) {
-                var linkPageNum = parseInt(intMatches[1], 10);
+            const linkPageNum = getLinkNumber(text);
+            if (linkPageNum) {
                 // If the number is greater than MAX_LINK_NUM
                 // and doesn't follow smaller numbers
                 // it probably doesn't have anything to do with
@@ -728,9 +730,8 @@
 
             text = link.text.trim();
 
-            var intMatches = isInt.exec(text);
-            if (intMatches) {
-                var linkPageNum = parseInt(intMatches[1], 10);
+            const linkPageNum = getLinkNumber(text);
+            if (linkPageNum) {
                 if (linkPageNum === linkNum) {
                     return nextplease.openResult(curWindow, [nextplease.ResultType.Link, link]);
                 }
