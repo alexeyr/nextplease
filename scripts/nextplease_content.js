@@ -564,7 +564,6 @@
         var galleryURL = nextplease.getGalleryNumberURL(curWindow, direction);
         // alert(galleryURL);
         // alert(nextplease.imageLocationArray.length);
-        // if (galleryURL) {curWindow.open(galleryURL, "_self", "");}
         if (galleryURL && !prefetching) { return [nextplease.ResultType.URL, galleryURL]; }
 
         // None of it worked, so make a recursive call to
@@ -721,7 +720,7 @@
         switch (result[0]) {
         case nextplease.ResultType.URL:
             var url = result[1];
-            curWindow.open(url, "_self", "");
+            curWindow.location.href = url;
             return true;
         case nextplease.ResultType.Link:
             var linkNode = result[1];
@@ -729,19 +728,17 @@
                 nextplease.logError("Tried to open undefined link, this should never happen!");
                 return false;
             }
-            // If it's got an onclick attr, then try to 
+            // If it's got an onclick attr, then try to
             // simulate a mouse click to activate link.
             if (linkNode.hasAttribute("onclick")) {
-                // alert(linkNode.getAttribute("onclick"));
                 var e = document.createEvent("MouseEvents");
-                // e.initMouseEvent("click", 1, 1, window, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, linkNode);
 
                 // From https://developer.mozilla.org/en/DOM/event.initMouseEvent
                 e.initMouseEvent("click", true, true, window,
                     0, 0, 0, 0, 0, false, false, false, false, 0, null);
                 linkNode.dispatchEvent(e);
             } else {
-                curWindow.open(linkNode.href, "_self", "");
+                curWindow.location.href = linkNode.href;
             }
             nextplease.gotHereUsingNextplease = true;
             return true;
@@ -778,8 +775,6 @@
                 var linkPageNum = parseInt(intMatches[1], 10);
                 if (linkPageNum === linkNum) {
                     return nextplease.openResult(curWindow, [nextplease.ResultType.Link, link]);
-                    //curWindow.open(link.href, "_self", "");
-                    //return true;
                 }
             }
         }
