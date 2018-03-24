@@ -332,12 +332,12 @@
 
         var temp;
 
-        var range = doc.createRange();
+        const range = doc.createRange();
 
-        var finishPrefetch = function () {
+        function finishPrefetch() {
             return prefetching && nextplease.prefetched.Next && nextplease.prefetched.Prev &&
                 nextplease.prefetched.First && nextplease.prefetched.Last;
-        };
+        }
 
         if (!nextplease.ignoreRels(curWindow)) {
             // Look for <LINK> tags
@@ -510,10 +510,65 @@
             return [nextplease.ResultType.Link, pageNumLinks[direction]];
         }
 
-        // Otherwise try looking for next/prev submit buttons 
+        // Otherwise try looking for next/prev submit buttons
         // if the user allows it.
         if (nextplease.prefs.allowsubmit) {
-            temp = nextplease.getForm(direction, prefetching);
+            nextplease.logDetail("looking for submit buttons");
+
+            // Look through all the HTML inputs for submit buttons
+            // that have a value that matches our phrases. If it
+            // finds a match, it calls input.click()
+            function getForm() {
+                // Probably would be a little faster to
+                // only check forms, but I'm getting problems
+                // with them. I'm not sure if it's only on
+                // malformed HTML pages, or if it's a Firefox bug.
+                const inputs = document.getElementsByTagName("input");
+
+                for (const input of inputs) {
+                    text = input.value.trim();
+
+                    direction1 = nextplease.directionFromText(text, direction, prefetching);
+                    if (direction === direction1) {
+                        return [nextplease.ResultType.Input, input];
+                    } else if (direction1 && prefetching) {
+                        nextplease.prefetched[direction1] = [nextplease.ResultType.Input, input];
+                    }
+                }
+
+                const buttons = document.getElementsByTagName("button");
+                const range = document.createRange();
+
+                for (const button of buttons) {
+                    range.selectNode(button);
+                    text = range.toString().trim();
+
+                    direction1 = nextplease.directionFromText(text, direction, prefetching);
+                    if (direction === direction1) {
+                        return [nextplease.ResultType.Input, button];
+                    } else if (direction1 && prefetching) {
+                        nextplease.prefetched[direction1] = [nextplease.ResultType.Input, button];
+                    }
+
+                    var imgElems = button.getElementsByTagName("img");
+                    if (imgElems.length > 0) {
+                        nextplease.logDetail("checking images inside <a>...</a>");
+                        // If the image matches, go to the URL.
+                        //alert(imgElems[0].src);
+                        direction1 = nextplease.directionFromImage(imgElems[0], direction, prefetching);
+                        if (direction === direction1) {
+                            return [nextplease.ResultType.Input, button];
+                        } else if (direction1 && prefetching) {
+                            nextplease.prefetched[direction1] = [nextplease.ResultType.Input, button];
+                            continue;
+                        }
+                    }
+                }
+
+                return finishPrefetch();
+            }
+
+            temp = getForm();
             if (temp) { return temp; }
         }
 
@@ -604,72 +659,6 @@
             padStr = "0" + padStr;
         }
         return padStr;
-    };
-
-    // Look through all the HTML inputs for submit buttons
-    // that have a value that matches our phrases. If it
-    // finds a match, it calls input.click()
-    nextplease.getForm = function (direction, prefetching) {
-        var finishPrefetch = function () {
-            return prefetching && nextplease.prefetched.Next && nextplease.prefetched.Prev &&
-                nextplease.prefetched.First && nextplease.prefetched.Last;
-        };
-
-        var i, text, direction1;
-
-        nextplease.logDetail("looking for submit buttons");
-
-        // Probably would be a little faster to
-        // only check forms, but I'm getting problems
-        // with them. I'm not sure if it's only on
-        // malformed HTML pages, or if it's a Firefox bug.
-        var inputs = document.getElementsByTagName("input");
-        var inputsNum = inputs.length;
-
-        for (i = 0; i < inputsNum; i++) {
-            var input = inputs[i];
-            text = input.value.trim();
-
-            direction1 = nextplease.directionFromText(text, direction, prefetching);
-            if (direction === direction1) {
-                return [nextplease.ResultType.Input, input];
-            } else if (direction1 && prefetching) {
-                nextplease.prefetched[direction1] = [nextplease.ResultType.Input, input];
-            }
-        }
-
-        var buttons = document.getElementsByTagName("button");
-        var buttonsNum = buttons.length;
-        var range = document.createRange();
-
-        for (i = 0; i < buttonsNum; i++) {
-            var button = buttons[i];
-            range.selectNode(button);
-            text = range.toString().trim();
-
-            direction1 = nextplease.directionFromText(text, direction, prefetching);
-            if (direction === direction1) {
-                return [nextplease.ResultType.Input, button];
-            } else if (direction1 && prefetching) {
-                nextplease.prefetched[direction1] = [nextplease.ResultType.Input, button];
-            }
-
-            var imgElems = buttons[i].getElementsByTagName("img");
-            if (imgElems.length > 0) {
-                nextplease.logDetail("checking images inside <a>...</a>");
-                // If the image matches, go to the URL.
-                //alert(imgElems[0].src);
-                direction1 = nextplease.directionFromImage(imgElems[0], direction, prefetching);
-                if (direction === direction1) {
-                    return [nextplease.ResultType.Input, button];
-                } else if (direction1 && prefetching) {
-                    nextplease.prefetched[direction1] = [nextplease.ResultType.Input, button];
-                    continue;
-                }
-            }
-        }
-
-        return finishPrefetch();
     };
 
     nextplease.openResult = function (curWindow, result) {
