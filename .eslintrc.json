@@ -20,6 +20,7 @@
             "always"
         ],
         "no-console": ["off"],
+        "no-inner-declarations": ["off"],
         "no-unused-vars": ["error", {
             "args": "none"
         }]

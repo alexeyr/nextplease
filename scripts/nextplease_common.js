@@ -8,7 +8,7 @@ nextplease.prefs = new Configs({
     allowsmartnext: false,
     checkframes: true,
     // TODO add to options.html
-    digitDelay: 500,
+    digitDelay: 1000,
 
     prefetch: 2,
 
@@ -75,14 +75,40 @@ nextplease.notify = function (input) {
             title: title,
             message: message
         };
-        const promise = browser.notifications.create(id, options);
-        if (timeout > 0) {
-            console.log(timeout);
-            promise.then((id) => {
-                setTimeout(() => browser.notifications.clear(id), timeout);
+
+        function create() {
+            const promise = browser.notifications.create(id, options);
+            if (timeout > 0) {
+                console.log(timeout);
+                promise.then((id) => {
+                    setTimeout(() => browser.notifications.clear(id), timeout);
+                });
+            }
+        }
+
+        if (id && browser.notifications.update) {
+            // try to update existing notification first,
+            // which isn't currently supported in Firefox
+            browser.notifications.update(id, options).then((updated) => {
+                if (!updated) {
+                    create();
+                }
             });
+        } else {
+            create();
         }
     } else {
         browser.runtime.sendMessage({notification: input});
     }
+};
+
+nextplease.sendMessageToActiveTab = function(message, handleError = nextplease.logError) {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+        const activeTab = tabs[0];
+        if (activeTab && activeTab.id) {
+            browser.tabs.sendMessage(activeTab.id, message);
+        } else {
+            nextplease.log("No active tab");
+        }
+    }).catch(handleError);
 };

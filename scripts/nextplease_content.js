@@ -48,10 +48,6 @@
 
     function onOptionsLoaded() {
         nextplease.readPreferences();
-        // nextplease.clearStatusBar();
-
-        // // no effect if nextplease.clearStatusBarTimer is invalid
-        // clearTimeout(nextplease.clearStatusBarTimer);
 
         nextplease.cacheLinkLocations();
 
@@ -762,7 +758,7 @@
 
     // Looks through all the links and finds the link
     // that matches the linkNum (an integer between
-    // 1 and 9). If it finds a match, it will go to 
+    // 1 and 9). If it finds a match, it will go to
     // that link.
     nextplease.openNumberedLink = function (curWindow, linkNum) {
         var text;
@@ -1018,9 +1014,12 @@
 
         nextplease.linkNumber = nextplease.linkNumber * 10 + digit;
 
-        // TODO show notification?
-        // nextplease.showInStatusBar(
-        //     browser.i18n.getMessage("lookingForNumberedLink", [nextplease.linkNumber]));
+        nextplease.notify({
+            id: "lookingForNumberedLink",
+            messageKey: "lookingForNumberedLink",
+            messageArgs: [nextplease.linkNumber],
+            timeout: nextplease.prefs.digitDelay
+        });
 
         nextplease.NumberShortcutTimer = setTimeout(nextplease.finishNumberShortcut, nextplease.prefs.digitDelay);
     };

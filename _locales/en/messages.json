@@ -67,6 +67,36 @@
     "LastPageCommand": {
         "message": "Go to the last page"
     },
+    "Digit0Command": {
+        "message": "Add 0 to page number"
+    },
+    "Digit1Command": {
+        "message": "Add 1 to page number"
+    },
+    "Digit2Command": {
+        "message": "Add 2 to page number"
+    },
+    "Digit3Command": {
+        "message": "Add 3 to page number"
+    },
+    "Digit4Command": {
+        "message": "Add 4 to page number"
+    },
+    "Digit5Command": {
+        "message": "Add 5 to page number"
+    },
+    "Digit6Command": {
+        "message": "Add 6 to page number"
+    },
+    "Digit7Command": {
+        "message": "Add 7 to page number"
+    },
+    "Digit8Command": {
+        "message": "Add 8 to page number"
+    },
+    "Digit9Command": {
+        "message": "Add 9 to page number"
+    },
     "enableNumberShortcuts": {
         "message": "Enable |number shortcuts for navigating numbered links."
     },

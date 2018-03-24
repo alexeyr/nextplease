@@ -22,7 +22,7 @@
         "default_popup": "popup/nextplease_popup.html",
         "browser_style": true
     },
-  
+
     "commands": {
         "Next": {
             "suggested_key": {
@@ -47,6 +47,66 @@
                 "default": "Alt+Shift+Down"
             },
             "description": "__MSG_LastPageCommand__"
+        },
+        "0": {
+            "suggested_key": {
+                "default": "Alt+Shift+0"
+            },
+            "description": "__MSG_Digit0Command__"
+        },
+        "1": {
+            "suggested_key": {
+                "default": "Alt+Shift+1"
+            },
+            "description": "__MSG_Digit1Command__"
+        },
+        "2": {
+            "suggested_key": {
+                "default": "Alt+Shift+2"
+            },
+            "description": "__MSG_Digit2Command__"
+        },
+        "3": {
+            "suggested_key": {
+                "default": "Alt+Shift+3"
+            },
+            "description": "__MSG_Digit3Command__"
+        },
+        "4": {
+            "suggested_key": {
+                "default": "Alt+Shift+4"
+            },
+            "description": "__MSG_Digit4Command__"
+        },
+        "5": {
+            "suggested_key": {
+                "default": "Alt+Shift+5"
+            },
+            "description": "__MSG_Digit5Command__"
+        },
+        "6": {
+            "suggested_key": {
+                "default": "Alt+Shift+6"
+            },
+            "description": "__MSG_Digit6Command__"
+        },
+        "7": {
+            "suggested_key": {
+                "default": "Alt+Shift+7"
+            },
+            "description": "__MSG_Digit7Command__"
+        },
+        "8": {
+            "suggested_key": {
+                "default": "Alt+Shift+8"
+            },
+            "description": "__MSG_Digit8Command__"
+        },
+        "9": {
+            "suggested_key": {
+                "default": "Alt+Shift+9"
+            },
+            "description": "__MSG_Digit9Command__"
         }
     },
 

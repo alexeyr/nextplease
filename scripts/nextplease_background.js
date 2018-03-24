@@ -1,13 +1,11 @@
 (function () {
-    browser.commands.onCommand.addListener((direction) => {
-        browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-            var active_tab = tabs[0];
+    browser.commands.onCommand.addListener((command) => {
+        const digit = parseInt(command, 10);
 
-            // TODO handle number shortcuts when commands are added (send {digit:...})
-            browser.tabs.sendMessage(active_tab.id, {
-                direction: direction
-            });
-        }).catch(nextplease.logError);
+        const message = digit ?
+            { digit: digit } :
+            { direction: command };
+        nextplease.sendMessageToActiveTab(message);
     });
 
     browser.runtime.onMessage.addListener((message) => {
