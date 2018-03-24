@@ -354,29 +354,6 @@
                 nextplease.prefetched.First && nextplease.prefetched.Last;
         };
 
-        // TODO https://stackoverflow.com/questions/48966898/go-back-forward-in-history-in-webextensions
-        if (nextplease.prefs.allowsmartnext) {
-            if (getBrowser().canGoForward) {
-                nextplease.log("forward in history");
-                link = [nextplease.ResultType.History, 1];
-                if (direction === "Next") {
-                    return link;
-                } else if (prefetching) {
-                    nextplease.prefetched.Next = link;
-                }
-            }
-
-            if (getBrowser().canGoBack) {
-                nextplease.log("back in history");
-                link = [nextplease.ResultType.History, -1];
-                if (direction === "Prev") {
-                    return link;
-                } else if (prefetching) {
-                    nextplease.prefetched.Prev = link;
-                }
-            }
-        }
-
         if (!nextplease.ignoreRels(curWindow)) {
             // Look for <LINK> tags
             nextplease.logDetail("checking <link> tags");

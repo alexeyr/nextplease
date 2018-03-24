@@ -29,8 +29,7 @@
         "nextplease": true,
         "ShortcutCustomizeUI": true,
         "Configs": true,
-        "stringArrayFromPref": true,
-        "getBrowser": false // FIXME
+        "stringArrayFromPref": true
     },
     "parserOptions": {
         "ecmaVersion": 2017

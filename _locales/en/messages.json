@@ -143,9 +143,6 @@
     "optionsEnableSubmit": {
         "message": "Search for HTML submit buttons"
     },
-    "optionsSmartNext": {
-        "message": "Enable smart forward-or-next/back-or-previous behavior"
-    },
     "optionsCheckFrames": {
         "message": "Look for links inside frames"
     },
