@@ -121,6 +121,7 @@
         "storage",
         "notifications",
         "contextMenus",
+        "webNavigation",
         "<all_urls>"
     ],
 

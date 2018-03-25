@@ -19,22 +19,13 @@
         nextplease[key] = nextplease.key || {};
     }
 
-    // Listen for messages from the popup and from commands
-    browser.runtime.onMessage.addListener((message) => {
-        nextplease.log(`Handling message ${JSON.stringify(message)}`);
-
-        if (message.direction) {
-            nextplease.openDirection(message.direction);
-        } else if (message.number) {
-            nextplease.openNumberedLink(window, message.number);
-        } else if (message.digit) {
-            nextplease.handleNumberShortcut(message.digit);
-        }
-    });
-
     function onOptionsLoaded() {
         nextplease.readPreferences();
+        afterLoad();
+    }
 
+    function afterLoad() {
+        console.log("afterLoad");
         nextplease.cacheLinkLocations();
 
         nextplease.prefetched = {};
@@ -60,12 +51,28 @@
         };
     }
 
+    // Listen for messages from the popup and from commands
+    browser.runtime.onMessage.addListener((message) => {
+        nextplease.log(`Handling message ${JSON.stringify(message)}`);
+
+        if (message.direction) {
+            nextplease.openDirection(message.direction);
+        } else if (message.number) {
+            nextplease.openNumberedLink(window, message.number);
+        } else if (message.digit) {
+            nextplease.handleNumberShortcut(message.digit);
+        } else if (message.navigation) {
+            afterLoad();
+        }
+    });
+
     nextplease.prefs.$loaded.then(onOptionsLoaded);
     nextplease.prefs.$addObserver(key => {
         if (key !== "showAdvanced") {
             debounce(onOptionsLoaded, 250);
         }
     });
+    document.addEventListener("DOMContentLoaded", afterLoad);
 
     nextplease.gotHereUsingNextplease = false;
 

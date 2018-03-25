@@ -14,6 +14,10 @@
         }
     });
 
+    browser.webNavigation.onHistoryStateUpdated.addListener(details => {
+        browser.tabs.sendMessage(details.tabId, {navigation: true});
+    });
+
     function logError() {
         if (browser.runtime.lastError) {
             nextplease.logError(browser.runtime.lastError);
