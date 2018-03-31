@@ -68,7 +68,7 @@
 
         addTextbox.keyup(function (e) {
             if (!isImage) {
-                this.value = this.value.toLowerCase();
+                this.value = nextplease.normalize(this.value);
             }
             var errorMessage;
             var valid = false;

@@ -207,6 +207,7 @@
             for (const direction of nextplease.directions) {
                 const prefName = direction + phraseOrImage;
                 for (const value of stringArrayFromPref(prefName)) {
+                    // already normalized
                     if (value) {
                         map[value] = direction;
                     }
@@ -224,7 +225,7 @@
     nextplease.directionFromRel = function (link) {
         // Look for rel attributes for next/prev/first/last
         if (link.rel && link.href) {
-            var rel = link.rel.toLowerCase();
+            const rel = link.rel.toLowerCase();
             if (rel === "next") {
                 nextplease.log(`found rel="${link.rel}": ${link.href}`);
                 return "Next";
@@ -249,7 +250,7 @@
         }
 
         if (text) {
-            text = text.toLowerCase();
+            text = nextplease.normalize(text);
             const direction1 = nextplease.PhraseMap[text];
             if (direction1) {
                 nextplease.log(`found text match for "${text}"`);

@@ -47,7 +47,7 @@
 
     async function handleContextMenu(info, tab, isShow) {
         const isImage = info.mediaType && info.mediaType === "image";
-        const target = isImage ? info.linkUrl : info.linkText.toLowerCase();
+        const target = isImage ? info.linkUrl : nextplease.normalize(info.linkText);
 
         function prefName(direction) {
             return direction + (isImage ? "Image" : "Phrase");

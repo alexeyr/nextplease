@@ -58,7 +58,7 @@ nextplease.getDirectionString = function (dir) {
 
 function stringArrayFromPref(prefName) {
     let value = nextplease.prefs[prefName] || "";
-    return value.split("\n").map(x => x.toLowerCase());
+    return value.split("\n").map(nextplease.normalize);
 }
 
 nextplease.directions = ["Next", "Prev", "First", "Last"];
@@ -109,4 +109,8 @@ nextplease.sendMessageToActiveTab = function(message, handleError = nextplease.l
             nextplease.log("No active tab");
         }
     }).catch(handleError);
+};
+
+nextplease.normalize = function(text) {
+    return text.trim().normalize("NFD").toLowerCase();
 };
