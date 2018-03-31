@@ -23,12 +23,12 @@
     let textList = document.getElementById("textList");
     let imageList = document.getElementById("imageList");
 
-    nextplease.directions.forEach(direction => {
-        let direction1 = direction.toLowerCase();
+    for (const direction of nextplease.directions) {
+        const direction1 = direction.toLowerCase();
         prefsToElements[`${direction1}regex`] = regexText;
         prefsToElements[`${direction1}phrase`] = textList;
         prefsToElements[`${direction1}image`] = imageList;
-    });
+    }
 
     nextplease.prefs.$addObserver(key => {
         let elem = prefsToElements[key];
@@ -229,7 +229,9 @@
         let newValueCount = values.length;
 
         listbox.values = [];
-        values.forEach(value => appendOption(listbox, value));
+        for (const value of values) {
+            appendOption(listbox, value);
+        }
 
         // if new values were added, scroll to bottom to show them
         if (newValueCount > oldValueCount) {

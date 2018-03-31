@@ -81,34 +81,31 @@
     });
 
     nextplease.validateCache = function () {
-        var i, url, urlsCache = nextplease.urlsCache, cachedURLsNum = urlsCache.size;
-        var messageLines = ["size=" + cachedURLsNum + "; first=" + urlsCache.first + "; last=" + urlsCache.last], message;
+        const urlsCache = nextplease.urlsCache, cachedURLsNum = urlsCache.size;
+        let messageLines = [`size=${cachedURLsNum}; first=${urlsCache.first}; last=${urlsCache.last}`];
 
         if (cachedURLsNum > 0) {
-            url = urlsCache.first;
-            for (i = 0; i < cachedURLsNum; i++ , url = urlsCache.map[url]) {
-                messageLines[messageLines.length] = "i=" + i + "; url=" + url + "; urlsCache.map[url]=" + urlsCache.map[url];
+            let url = urlsCache.first;
+            for (let i = 0; i < cachedURLsNum; i++ , url = urlsCache.map[url]) {
+                messageLines.push(`i=${i}; url=${url}; urlsCache.map[url]=${urlsCache.map[url]}`);
                 if (!url) {
-                    message = messageLines.join("\n\n");
-                    nextplease.logError(message);
+                    nextplease.logError(messageLines.join("\n\n"));
                     return;
                 }
             }
             if (url !== urlsCache.last) {
-                message = messageLines.join("\n\n");
-                nextplease.logError(message);
+                nextplease.logError(messageLines.join("\n\n"));
                 return;
             }
         } else if (urlsCache.first || urlsCache.last) {
-            message = messageLines[0];
-            nextplease.logError(message);
+            nextplease.logError(messageLines[0]);
         }
     };
 
     nextplease.addToCache = function (url) {
-        var urlToDelete, urlsCache = nextplease.urlsCache, incrSize = true;
+        const urlsCache = nextplease.urlsCache;
+        let incrSize = true;
         if (url && !urlsCache.map[url]) {
-            // nextplease.logDetail("adding " + url + " to image cache");
             if (urlsCache.size === 0) {
                 urlsCache.first = url;
                 urlsCache.map[url] = url;
@@ -116,7 +113,7 @@
                 urlsCache.size = 1;
             } else {
                 if (urlsCache.size >= urlsCache.MAX_SIZE) {
-                    urlToDelete = urlsCache.first;
+                    const urlToDelete = urlsCache.first;
                     urlsCache.first = urlsCache.map[urlToDelete];
                     delete urlsCache.map[urlToDelete];
                     incrSize = false;
@@ -129,16 +126,14 @@
                     urlsCache.size++;
                 }
             }
-        } //else {
-        //    nextplease.logDetail("" + url + " is already in image cache");
-        //}
+        }
     };
 
     nextplease.cacheLinkLocations = function () {
         var i, urlsCache = nextplease.urlsCache;
 
         nextplease.logDetail("caching image location");
-        nextplease.logDetail("there are currently " + urlsCache.size + " image URLs cached");
+        nextplease.logDetail(`there are currently ${urlsCache.size} image URLs cached`);
 
         var theDocument = window.document;
         nextplease.currentHostName = window.location.host;
@@ -150,7 +145,7 @@
         var imgElems = theDocument.getElementsByTagName("img"), imgElemsNum = imgElems.length;
         if (imgElems) {
             var numberOfImagesToCheck = Math.min(MAX_LINKS_TO_CHECK, imgElemsNum);
-            nextplease.logDetail("Checking " + numberOfImagesToCheck + " <img> elements out of " + imgElemsNum + " total.");
+            nextplease.logDetail(`Checking ${numberOfImagesToCheck} <img> elements out of ${imgElemsNum} total.`);
             for (i = 0; i < numberOfImagesToCheck; i++) {
                 nextplease.addToCache(imgElems[i].src);
             }
@@ -159,7 +154,7 @@
         var links = theDocument.getElementsByTagName("a"), linksNum = links.length;
         if (links) {
             var numberOfLinksToCheck = Math.min(MAX_LINKS_TO_CHECK, linksNum);
-            nextplease.logDetail("Checking " + numberOfLinksToCheck + " <a> elements out of " + linksNum + " total.");
+            nextplease.logDetail(`Checking ${numberOfLinksToCheck} <a> elements out of ${linksNum} total.`);
             for (i = 0; i < numberOfLinksToCheck; i++) {
                 var linkUrl = links[i].href;
                 if (!urlsCache.map[linkUrl]) {
@@ -167,9 +162,7 @@
                     if (links[i].hostname === nextplease.currentHostName) {
                         nextplease.addToCache(linkUrl);
                     }
-                } //else {
-                //    nextplease.logDetail("" + linkUrl + " is already in image cache");
-                //}
+                }
             }
         }
         var end = new Date();
@@ -179,10 +172,6 @@
             nextplease.logDetail("checking cache correctness again");
             nextplease.validateCache();
         }
-
-        nextplease.logDetail("there are currently " + urlsCache.size + " URLs cached");
-
-        // nextplease.logDetail(nextplease.imageLocationArray.toString());
     };
 
     nextplease.readPreferences = function () {
@@ -214,19 +203,22 @@
         // by reading the preferences or defaults,
         // and put the phrases in a lookup table.
         function initExactMatches(phraseOrImage) {
-            let map = {};
-            nextplease.directions.forEach(direction => {
-                let prefName = (direction + phraseOrImage).toLowerCase();
-                let values = stringArrayFromPref(prefName);
-                values.forEach(value => map[value] = direction);
-            });
+            const map = {};
+            for (const direction of nextplease.directions) {
+                const prefName = (direction + phraseOrImage).toLowerCase();
+                for (const value of stringArrayFromPref(prefName)) {
+                    if (value) {
+                        map[value] = direction;
+                    }
+                }
+            }
             nextplease[phraseOrImage + "Map"] = map;
         }
 
     };
 
     nextplease.notifyLinkNotFound = function () {
-        nextplease.notify({messageKey: "linkNotFound"});
+        nextplease.notify({ messageKey: "linkNotFound" });
     };
 
     nextplease.directionFromRel = function (link) {
@@ -258,32 +250,27 @@
 
         if (text) {
             text = text.toLowerCase();
-            var direction1 = nextplease.PhraseMap[text];
+            const direction1 = nextplease.PhraseMap[text];
             if (direction1) {
                 nextplease.log(`found text match for "${text}"`);
                 return direction1;
-            } else {
-                if (prefetching) {
-                    for (let i = 0; i < nextplease.directions.length; i++) {
-                        var direction2 = nextplease.directions[i];
-                        if (!nextplease.prefetched[direction2] && testRegex(direction2)) {
-                            nextplease.log(`found regex match for "${text}"`);
-                            return direction2;
-                        }
-                    }
-                } else {
-                    if (testRegex(direction)) {
+            } else if (prefetching) {
+                for (const direction2 of nextplease.directions) {
+                    if (!nextplease.prefetched[direction2] && testRegex(direction2)) {
                         nextplease.log(`found regex match for "${text}"`);
-                        return direction;
+                        return direction2;
                     }
                 }
+            } else if (testRegex(direction)) {
+                nextplease.log(`found regex match for "${text}"`);
+                return direction;
             }
         }
         return undefined;
     };
 
     nextplease.directionFromImage = function (imageElem, direction, prefetching) {
-        var direction1 = nextplease.ImageMap[imageElem.src];
+        const direction1 = nextplease.ImageMap[imageElem.src];
         if (direction1) {
             nextplease.log("found image match with URL " + imageElem.src);
             if (!prefetching || !nextplease.prefetched[direction1]) {
@@ -299,7 +286,7 @@
     };
 
     nextplease.ignoreRels = function (curWindow) {
-        var url = curWindow.location.href;
+        const url = curWindow.location.href;
         // viewtopic.php is used in PHPBB, index.php in SMF
         // both (at least some versions) use <link> tags incorrectly
         return url.match(/(viewtopic|index)\.php/);
@@ -308,7 +295,7 @@
     // Looks through all the links on the page
     // and tries to look for one whose text matches
     // one of the phrases or images. If so, it goes to/
-    // the corresponding link. 
+    // the corresponding link.
     // pages with frames.
     nextplease.getLink = function (curWindow, direction) {
         var doc = curWindow.document;
@@ -341,7 +328,7 @@
         if (!nextplease.ignoreRels(curWindow)) {
             // Look for <LINK> tags
             nextplease.logDetail("checking <link> tags");
-            var linktags = doc.getElementsByTagName("link"), linktagsNum = linktags.length;
+            const linktags = doc.getElementsByTagName("link"), linktagsNum = linktags.length;
 
             for (let i = 0; i < linktagsNum; i++) {
                 link = linktags[i];
@@ -426,7 +413,7 @@
                     nextplease.logDetail("found link number " + linkPageNum + ", checking...");
                     // Try to figure out what the current page and
                     // next/prev links are for pages that just have
-                    // numbered links like  1 2 x 4 5. 
+                    // numbered links like  1 2 x 4 5.
                     //     if (linkPageNum === 1) {
                     // We're seeing a number link that is smaller
                     // than a previous one so assume that we're
@@ -602,11 +589,11 @@
 
             const MAX_GALLERY_GAP = 20;
 
-            var curNumber, urlNumber, linkUrl;
+            let curNumber, urlNumber, linkUrl;
 
             function makeLinkUrl() {
-                var padStr = "" + urlNumber;
-                var padLen = numberUrlPartLength - padStr.length;
+                let padStr = "" + urlNumber;
+                const padLen = numberUrlPartLength - padStr.length;
                 for (let i = 0; i < padLen; i++) {
                     padStr = "0" + padStr;
                 }
@@ -628,7 +615,7 @@
                 return linkUrl;
             } else if (direction === "Prev") {
                 curNumber = parseInt(matches[2], 10);
-                var maxToSubtract = Math.min(curNumber, MAX_GALLERY_GAP);
+                const maxToSubtract = Math.min(curNumber, MAX_GALLERY_GAP);
                 for (let i = 1; i <= maxToSubtract; i++) {
                     urlNumber = curNumber - i;
                     linkUrl = makeLinkUrl();
@@ -659,38 +646,42 @@
         }
 
         switch (result[0]) {
-        case nextplease.ResultType.URL:
-            var url = result[1];
-            curWindow.location.href = url;
-            return true;
-        case nextplease.ResultType.Link:
-            var linkNode = result[1];
-            if (!linkNode) {
-                nextplease.logError("Tried to open undefined link, this should never happen!");
-                return false;
+            case nextplease.ResultType.URL: {
+                const url = result[1];
+                curWindow.location.href = url;
+                return true;
             }
-            // If it's got an onclick attr, then try to
-            // simulate a mouse click to activate link.
-            if (linkNode.hasAttribute("onclick")) {
-                var e = document.createEvent("MouseEvents");
+            case nextplease.ResultType.Link: {
+                const linkNode = result[1];
+                if (!linkNode) {
+                    nextplease.logError("Tried to open undefined link, this should never happen!");
+                    return false;
+                }
+                // If it's got an onclick attr, then try to
+                // simulate a mouse click to activate link.
+                if (linkNode.hasAttribute("onclick")) {
+                    const e = document.createEvent("MouseEvents");
 
-                // From https://developer.mozilla.org/en/DOM/event.initMouseEvent
-                e.initMouseEvent("click", true, true, window,
-                    0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                linkNode.dispatchEvent(e);
-            } else {
-                curWindow.location.href = linkNode.href;
+                    // From https://developer.mozilla.org/en/DOM/event.initMouseEvent
+                    e.initMouseEvent("click", true, true, window,
+                        0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                    linkNode.dispatchEvent(e);
+                } else {
+                    curWindow.location.href = linkNode.href;
+                }
+                nextplease.gotHereUsingNextplease = true;
+                return true;
             }
-            nextplease.gotHereUsingNextplease = true;
-            return true;
-        case nextplease.ResultType.Input:
-            var input = result[1];
-            input.click();
-            return true;
-        case nextplease.ResultType.History:
-            var num = result[1];
-            curWindow.history.go(num);
-            return true;
+            case nextplease.ResultType.Input: {
+                const input = result[1];
+                input.click();
+                return true;
+            }
+            case nextplease.ResultType.History: {
+                const num = result[1];
+                curWindow.history.go(num);
+                return true;
+            }
         }
     };
 
@@ -699,29 +690,22 @@
     // 1 and 9). If it finds a match, it will go to
     // that link.
     nextplease.openNumberedLink = function (curWindow, linkNum) {
-        var text;
-        var i, j;
-
         nextplease.logDetail("looking for a link numbered " + linkNum);
-        var alinks = curWindow.document.links;
+        const alinks = curWindow.document.links;
 
         // Search through each link
-        for (i = alinks.length - 1; i >= 0; i--) {
-            var link = alinks[i];
+        for (let i = alinks.length - 1; i >= 0; i--) {
+            const link = alinks[i];
 
-            text = link.text.trim();
-
-            const linkPageNum = getLinkNumber(text);
-            if (linkPageNum) {
-                if (linkPageNum === linkNum) {
-                    return nextplease.openResult(curWindow, [nextplease.ResultType.Link, link]);
-                }
+            const linkPageNum = getLinkNumber(link.text.trim());
+            if (linkPageNum === linkNum) {
+                return nextplease.openResult(curWindow, [nextplease.ResultType.Link, link]);
             }
         }
 
         if (nextplease.prefs.checkframes) {
-            var frames = curWindow.frames;
-            for (j = 0; j < frames.length; j++) {
+            const frames = curWindow.frames;
+            for (let j = 0; j < frames.length; j++) {
                 if (nextplease.openNumberedLink(frames[j], linkNum)) { return true; }
             }
         }
@@ -731,7 +715,7 @@
     };
 
     nextplease.openDirection = function (direction) {
-        var result = nextplease.prefetched[direction] || nextplease.getLink(window, direction);
+        const result = nextplease.prefetched[direction] || nextplease.getLink(window, direction);
         if (result) {
             return nextplease.openResult(window, result);
         } else {
@@ -757,19 +741,19 @@
         if (result) {
             var element;
             switch (result[0]) {
-            case nextplease.ResultType.URL:
-                break;
-            case nextplease.ResultType.Link:
-            case nextplease.ResultType.Input:
-                element = result[1];
-                break;
-            // case nextplease.ResultType.History:
-            // TODO The forward button doesn't get unhighlighted correctly
-            // when it becomes disabled.
-            // switch (result[1]) {
-            //     case 1: element = document.getElementById("forward-button"); break;
-            //     case -1: element = document.getElementById("back-button"); break;
-            // }
+                case nextplease.ResultType.URL:
+                    break;
+                case nextplease.ResultType.Link:
+                case nextplease.ResultType.Input:
+                    element = result[1];
+                    break;
+                // case nextplease.ResultType.History:
+                // TODO The forward button doesn't get unhighlighted correctly
+                // when it becomes disabled.
+                // switch (result[1]) {
+                //     case 1: element = document.getElementById("forward-button"); break;
+                //     case -1: element = document.getElementById("back-button"); break;
+                // }
             }
             if (element) {
                 if (!nextplease.highlighted_old_styles[element]) {
