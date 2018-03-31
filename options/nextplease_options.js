@@ -24,10 +24,9 @@
     let imageList = document.getElementById("imageList");
 
     for (const direction of nextplease.directions) {
-        const direction1 = direction.toLowerCase();
-        prefsToElements[`${direction1}regex`] = regexText;
-        prefsToElements[`${direction1}phrase`] = textList;
-        prefsToElements[`${direction1}image`] = imageList;
+        prefsToElements[directionRegexPref(direction)] = regexText;
+        prefsToElements[directionTextPref(direction)] = textList;
+        prefsToElements[directionImagePref(direction)] = imageList;
     }
 
     nextplease.prefs.$addObserver(key => {
@@ -44,7 +43,7 @@
             setPrefFromUI(this);
         }
         if (isCheckbox(this)) {
-            // The checkboxes which have sibling inputs are 
+            // The checkboxes which have sibling inputs are
             // the highlight/highlightPrefetched ones.
             // Disable the color inputs if they are unchecked.
             let checked = this.checked;
@@ -131,17 +130,17 @@
     setupListAddRemove("text");
     setupListAddRemove("image");
     $("#regexResetButton").click(() => resetPref(directionRegexPref()));
-    $("#galleryRegexResetButton").click(() => resetPref("galleryregex"));
+    $("#galleryRegexResetButton").click(() => resetPref("GalleryRegex"));
 
     let prefRegexes = $(".regex");
 
     prefRegexes.keyup(function () {
-        var errorMessage;
+        let errorMessage;
         try {
             if (this.value.trim()) {
                 let regex = new RegExp(this.value);
-                if (this.pref === "galleryregex") {
-                    var matches = regex.exec("http://nextplease.mozdev.org/test/test101.jpg");
+                if (this.pref === "GalleryRegex") {
+                    const matches = regex.exec("http://nextplease.mozdev.org/test/test101.jpg");
                     if (!matches || (matches.length !== 4)) {
                         errorMessage = browser.i18n.getMessage("invalidGallery");
                     } else {
@@ -160,9 +159,9 @@
     });
 
     var currentDirection;
-    function directionRegexPref(direction = currentDirection) { return `${direction}regex`; }
-    function directionTextPref(direction = currentDirection) { return `${direction}phrase`; }
-    function directionImagePref(direction = currentDirection) { return `${direction}image`; }
+    function directionRegexPref(direction = currentDirection) { return `${direction}Regex`; }
+    function directionTextPref(direction = currentDirection) { return `${direction}Phrase`; }
+    function directionImagePref(direction = currentDirection) { return `${direction}Image`; }
 
     function setPrefKey(elem, prefKey) {
         elem.pref = prefKey;

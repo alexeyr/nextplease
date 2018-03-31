@@ -1,5 +1,5 @@
 /* eslint no-unused-vars: off */
-var nextplease = {};
+const nextplease = {};
 
 nextplease.prefs = new Configs({
     allowsubmit: false,
@@ -10,21 +10,21 @@ nextplease.prefs = new Configs({
 
     prefetch: "smart",
 
-    nextregex: "^next(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
-    prevregex: "^((<{0,2})|«|<|[\u25C0-\u25C5]|\u2190|\u219E)\\s*((prev(ious)?(\\s+\\d+)?(\\s+\\w+)?)|back)\\s*$",
-    firstregex: "^((<{0,2})|«|<|[\u25C0-\u25C5]|\u2190|\u219E)\\s*(first(\\s+\\d+)?(\\s+\\w+)?)\\s*$",
-    lastregex: "^last(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
-    galleryregex: "^(.*\\D)(\\d+)((?:\\.\\w+|[\\/])?)$",
+    NextRegex: "^next(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
+    PrevRegex: "^((<{0,2})|«|<|[\u25C0-\u25C5]|\u2190|\u219E)\\s*((prev(ious)?(\\s+\\d+)?(\\s+\\w+)?)|back)\\s*$",
+    FirstRegex: "^((<{0,2})|«|<|[\u25C0-\u25C5]|\u2190|\u219E)\\s*(first(\\s+\\d+)?(\\s+\\w+)?)\\s*$",
+    LastRegex: "^last(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
+    GalleryRegex: "^(.*\\D)(\\d+)((?:\\.\\w+|[\\/])?)$",
 
-    nextphrase: "next|next >|>|next »|»|next >>|>>|more results|newer »|older topics »|next page|go to the next photo in the stream",
-    prevphrase: "previous|prev|< previous|previous results|< prev|<|« prev|«|<< prev|<<|« older|« newer topics|previous page|go to the previous photo in the stream",
-    firstphrase: "first|< first|first page|« first",
-    lastphrase: "last|last >|last page|last »",
+    NextPhrase: "next|next >|>|next »|»|next >>|>>|more results|newer »|older topics »|next page|go to the next photo in the stream",
+    PrevPhrase: "previous|prev|< previous|previous results|< prev|<|« prev|«|<< prev|<<|« older|« newer topics|previous page|go to the previous photo in the stream",
+    FirstPhrase: "first|< first|first page|« first",
+    LastPhrase: "last|last >|last page|last »",
 
-    nextimage: "http://g-images.amazon.com/images/G/01/search-browse/button-more-results.gif",
-    previmage: "http://g-images.amazon.com/images/G/01/search-browse/button-previous.gif",
-    firstimage: "",
-    lastimage: "",
+    NextImage: "http://g-images.amazon.com/images/G/01/search-browse/button-more-results.gif",
+    PrevImage: "http://g-images.amazon.com/images/G/01/search-browse/button-previous.gif",
+    FirstImage: "",
+    LastImage: "",
 
     logLevel: 0,
 

@@ -50,7 +50,7 @@
         const target = isImage ? info.linkUrl : info.linkText.toLowerCase();
 
         function prefName(direction) {
-            return direction.toLowerCase() + (isImage ? "image" : "phrase");
+            return direction + (isImage ? "Image" : "Phrase");
         }
         if (isShow) {
             // we're in onShown

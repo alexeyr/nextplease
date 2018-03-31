@@ -188,7 +188,7 @@
         }
 
         function initRegexFromPref(direction) {
-            let prefKey = direction.toLowerCase() + "regex";
+            let prefKey = direction + "Regex";
             let regex = nextplease.prefs[prefKey];
             try {
                 regex = new RegExp(regex, "i");
@@ -205,7 +205,7 @@
         function initExactMatches(phraseOrImage) {
             const map = {};
             for (const direction of nextplease.directions) {
-                const prefName = (direction + phraseOrImage).toLowerCase();
+                const prefName = direction + phraseOrImage;
                 for (const value of stringArrayFromPref(prefName)) {
                     if (value) {
                         map[value] = direction;
