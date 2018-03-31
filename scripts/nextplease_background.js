@@ -20,32 +20,78 @@
         }
     }
 
-    function createContextMenuItem(options) {
-        browser.contextMenus.create(Object.assign(options, {
-            contexts: ["link", "image"]
-        }), logError);
-    }
+    const onShownListener = async (info, tab) => await handleContextMenu(info, tab, true);
+    const onClickedListener = async (info, tab) => await handleContextMenu(info, tab, false);
 
-    // TODO can't handle Chrome for now, which doesn't support this
-    // https://stackoverflow.com/questions/49466636/updating-context-menu-depending-on-the-clicked-link-in-a-chrome-extension
-    if (browser.contextMenus.onShown) {
-        createContextMenuItem({ id: "target", title: "%s" });
+    async function createOrRemoveContextMenu() {
+        function createContextMenuItem(options) {
+            browser.contextMenus.create(Object.assign(options, {
+                contexts: ["link", "image"]
+            }), logError);
+        }
 
-        createContextMenuItem({ type: "separator" });
+        function addListenerIfNeeded(event, listener) {
+            if (!event.hasListener(listener)) {
+                event.addListener(listener);
+            }
+        }
 
-        for (const direction of nextplease.directions) {
-            const itemTitle = browser.i18n.getMessage("useContextMenu",
-                [browser.i18n.getMessage(`${direction}Page`)]);
+        if (browser.contextMenus) {
+            browser.contextMenus.removeAll();
+            if (nextplease.prefs.allowcontextmenu) {
+                // TODO don't handle Chrome for now, which doesn't support `onShown`
+                // https://stackoverflow.com/questions/49466636/updating-context-menu-depending-on-the-clicked-link-in-a-chrome-extension
+                if (browser.contextMenus.onShown) {
+                    if (await nextplease.hasContextMenuPermissions()) {
+                        createContextMenuItem({ id: "target", title: "%s" });
 
-            createContextMenuItem({
-                id: direction,
-                type: "checkbox",
-                title: itemTitle
-            });
+                        createContextMenuItem({ type: "separator" });
+
+                        for (const direction of nextplease.directions) {
+                            const itemTitle = browser.i18n.getMessage("useContextMenu",
+                                [browser.i18n.getMessage(`${direction}Page`)]);
+
+                            createContextMenuItem({
+                                id: direction,
+                                type: "checkbox",
+                                title: itemTitle
+                            });
+                        }
+                    } else {
+                        createContextMenuItem({
+                            id: "grantPermission",
+                            icons: { "16": "../icons/warning-16.svg" },
+                            title: browser.i18n.getMessage("contextMenuGrantPermission")
+                        });
+                    }
+
+                    addListenerIfNeeded(browser.contextMenus.onShown, onShownListener);
+                    addListenerIfNeeded(browser.contextMenus.onClicked, onClickedListener);
+                }
+            } else {
+                browser.contextMenus.onShown.removeListener(onShownListener);
+                browser.contextMenus.onClicked.removeListener(onClickedListener);
+            }
+        } else {
+            // no permission, do nothing
         }
     }
 
+    nextplease.prefs.$loaded.then(createOrRemoveContextMenu);
+    nextplease.prefs.$addObserver(key => {
+        if (key === "allowcontextmenu") {
+            createOrRemoveContextMenu();
+        }
+    });
+
     async function handleContextMenu(info, tab, isShow) {
+        if (!await nextplease.hasContextMenuPermissions()) {
+            if (!isShow) {
+                await browser.permissions.request(nextplease.allTabsPermission);
+            }
+            return;
+        }
+
         const isImage = info.mediaType && info.mediaType === "image";
         const target = isImage ? info.linkUrl : nextplease.normalize(info.linkText);
 
@@ -90,8 +136,4 @@
             }
         }
     }
-
-    browser.contextMenus.onShown.addListener(async (info, tab) => await handleContextMenu(info, tab, true));
-
-    browser.contextMenus.onClicked.addListener(async (info, tab) => await handleContextMenu(info, tab, false));
 })();

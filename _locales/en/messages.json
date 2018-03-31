@@ -91,9 +91,6 @@
     "Digit9Command": {
         "message": "Add 9 to page number"
     },
-    "enableNumberShortcuts": {
-        "message": "Enable |number shortcuts for navigating numbered links."
-    },
     "lookingForNumberedLink": {
         "message": "looking for link numbered $1"
     },
@@ -143,11 +140,17 @@
     "optionsEnableSubmit": {
         "message": "Search for HTML submit buttons"
     },
+    "optionsEnableContextMenu": {
+        "message": "Show context menu items (will need permission to access all tabs!)"
+    },
     "optionsCheckFrames": {
         "message": "Look for links inside frames"
     },
     "optionsPrefetch": {
         "message": "Find links immediately after loading page:"
+    },
+    "contextMenuGrantPermission": {
+        "message": "Grant permission to access all tabs"
     },
     "no": {
         "message": "no"
@@ -241,6 +244,9 @@
     },
     "importErrorNotSupported": {
         "message": "preference not supported in this version"
+    },
+    "importErrorRequiresPermission": {
+        "message": "preference can only be set in the options page"
     },
     "creator": {
         "message": "Created by:"

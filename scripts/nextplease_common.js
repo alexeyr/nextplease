@@ -4,7 +4,7 @@ const nextplease = {};
 nextplease.prefs = new Configs({
     allowsubmit: false,
     allownumbershortcuts: true,
-    allowcontextmenu: true,
+    allowcontextmenu: false,
     checkframes: true,
     // TODO add to options.html
     digitDelay: 1000,
@@ -96,11 +96,11 @@ nextplease.notify = function (input) {
             create();
         }
     } else {
-        browser.runtime.sendMessage({notification: input});
+        browser.runtime.sendMessage({ notification: input });
     }
 };
 
-nextplease.sendMessageToActiveTab = function(message, handleError = nextplease.logError) {
+nextplease.sendMessageToActiveTab = function (message, handleError = nextplease.logError) {
     browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
         const activeTab = tabs[0];
         if (activeTab && activeTab.id) {
@@ -111,6 +111,14 @@ nextplease.sendMessageToActiveTab = function(message, handleError = nextplease.l
     }).catch(handleError);
 };
 
-nextplease.normalize = function(text) {
+nextplease.normalize = function (text) {
     return text.trim().normalize("NFD").toLowerCase();
+};
+
+nextplease.allTabsPermission = {
+    origins: ["<all_urls>"]
+};
+
+nextplease.hasContextMenuPermissions = async function () {
+    return await browser.permissions.contains(nextplease.allTabsPermission);
 };
