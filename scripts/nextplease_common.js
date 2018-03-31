@@ -16,10 +16,10 @@ nextplease.prefs = new Configs({
     LastRegex: "^last(\\s+\\d+)?(\\s+\\w+)?\\s*((>{0,2})|»|>|>|[\u25B6-\u25BB]|\u2192|\u21A0)\\s*$",
     GalleryRegex: "^(.*\\D)(\\d+)((?:\\.\\w+|[\\/])?)$",
 
-    NextPhrase: "next|next >|>|next »|»|next >>|>>|more results|newer »|older topics »|next page|go to the next photo in the stream",
-    PrevPhrase: "previous|prev|< previous|previous results|< prev|<|« prev|«|<< prev|<<|« older|« newer topics|previous page|go to the previous photo in the stream",
-    FirstPhrase: "first|< first|first page|« first",
-    LastPhrase: "last|last >|last page|last »",
+    NextPhrase: "next\nnext >\n>\nnext »\n»\nnext >>\n>>\nmore results\nnewer »\nolder topics »\nnext page\ngo to the next photo in the stream",
+    PrevPhrase: "previous\nprev\n< previous\nprevious results\n< prev\n<\n« prev\n«\n<< prev\n<<\n« older\n« newer topics\nprevious page\ngo to the previous photo in the stream",
+    FirstPhrase: "first\n< first\nfirst page\n« first",
+    LastPhrase: "last\nlast >\nlast page\nlast »",
 
     NextImage: "http://g-images.amazon.com/images/G/01/search-browse/button-more-results.gif",
     PrevImage: "http://g-images.amazon.com/images/G/01/search-browse/button-previous.gif",
@@ -58,7 +58,7 @@ nextplease.getDirectionString = function (dir) {
 
 function stringArrayFromPref(prefName) {
     let value = nextplease.prefs[prefName] || "";
-    return value.split("|").map((x) => x.toLowerCase().replace(/&pipe;/g, "|"));
+    return value.split("\n").map(x => x.toLowerCase());
 }
 
 nextplease.directions = ["Next", "Prev", "First", "Last"];

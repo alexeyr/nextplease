@@ -81,10 +81,10 @@
                 const prefvalue = nextplease.prefs[prefname];
                 var resultprefvalue;
                 if (!info.wasChecked) {
-                    resultprefvalue = prefvalue + "|" + target.replace(/\|/g, "&pipe;");
+                    resultprefvalue = prefvalue + "\n" + target;
                 } else {
-                    const text1 = new RegExp("\\|" + target.replace(/\|/g, "&pipe;") + "(?=\\||$)", "g");
-                    resultprefvalue = prefvalue.replace(text1, "");
+                    const values = stringArrayFromPref(prefname);
+                    resultprefvalue = values.filter(v => v != target).join("\n");
                 }
                 nextplease.prefs[prefname] = resultprefvalue;
             }

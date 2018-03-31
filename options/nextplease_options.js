@@ -188,7 +188,7 @@
             if (prefExists) {
                 var value;
                 if (isListbox(elem)) {
-                    value = elem.values.map(x => x.replace(/\|/g, "&pipe;")).join("|");
+                    value = elem.values.join("\n");
                 } else if (isCheckbox(elem)) {
                     value = elem.checked;
                 } else {
