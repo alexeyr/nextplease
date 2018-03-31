@@ -31,4 +31,22 @@
     });
 
     $("#Options").click((e) => browser.runtime.openOptionsPage());
+
+    browser.commands.getAll().then(commands => {
+        for (const command of commands) {
+            const element = document.getElementById(command.name);
+            if (element) {
+                if (command.description) {
+                    element.title = command.description.replace(/__MSG_(.+?)__/g, aMatched => browser.i18n.getMessage(aMatched.slice(6, -2)));
+                }
+                if (command.shortcut) {
+                    const shortcutText = command.shortcut;
+                    // TODO Below doesn't work
+                    // const shortcutText = command.shortcut.split("+").map(ShortcutCustomizeUI.getLocalizedKey).join("+");
+                    // https://github.com/piroor/webextensions-lib-shortcut-customize-ui/issues/7
+                    element.title = `${element.title} (${shortcutText})`;
+                }
+            }
+        }
+    });
 })();

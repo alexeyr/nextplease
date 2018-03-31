@@ -7,27 +7,27 @@
     <link rel="stylesheet" href="nextplease_popup.css" />
 </head>
 
-<body>
+<body tabindex="-1">
     <div id="popup-content">
-        <div id="directions" class="icons">
-            <div id="First" title="Go to first page"></div>
-            <div id="Prev" title="Go to previous page"></div>
-            <div id="Next" title="Go to next page"></div>
-            <div id="Last" title="Go to last page"></div>
+        <div id="directions">
+            <div id="First" title="Go to first page" tabindex="0"><img src="../icons/first.png"></div>
+            <div id="Prev" title="Go to previous page" tabindex="0"><img src="../icons/prev.png"></div>
+            <div id="Next" title="Go to next page" tabindex="0"><img src="../icons/next.png"></div>
+            <div id="Last" title="Go to last page" tabindex="0"><img src="../icons/last.png"></div>
         </div>
-        <div class="gotopage">
+        <div id="gotopage">
             <label for="PageNum" data-i18n="pageNumLabel"></label>
-            <input type="number" id="PageNum" style="width: 3.5em;">
+            <input type="number" id="PageNum">
             <input type="button" id="PageNumButton" data-i18n="pageNumGo" disabled="true">
         </div>
-        <!-- <input id="Options" type="button" data-i18n="OptionsPage"></input> -->
-    </div>
-    <div id="error-content" class="hidden">
-        <p data-i18n="popupError">Can't find desired link.</p>
+        <div id="OptionsParent">
+            <button type="button" id="Options" data-i18n="OptionsPage"></button>
+        </div>
     </div>
     <script src="../jquery-3.3.1.slim.min.js"></script>
     <script src="../translate.js"></script>
     <script src="../lib/configs/Configs.js"></script>
+    <script src="../lib/shortcut-customize-ui/ShortcutCustomizeUI.js"></script>
     <script src="../scripts/nextplease_common.js"></script>
     <script src="nextplease_popup.js"></script>
 </body>

@@ -9,7 +9,7 @@
         if (labelFor) {
             let elem = document.getElementById(labelFor);
             if (elem)
-                elem.label = labels[i];         
+                elem.label = labels[i];
         }
     }
 

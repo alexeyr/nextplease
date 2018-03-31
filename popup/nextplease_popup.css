@@ -1,24 +1,5 @@
-html,
 body {
-    width: 100pt;
-    margin-bottom: 5px;
-}
-
-.hidden {
-    display: none;
-}
-
-.icons {
-    width: 80px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5pt;
-    margin-bottom: 25pt;
-}
-
-.gotopage {
-    clear: both;
-    text-align: center;
+    margin: 4px;
 }
 
 input,
@@ -28,34 +9,72 @@ button {
     vertical-align: middle;
 }
 
-#First {
-    background-image: url(../icons/first.png);
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    float: left;
+#directions {
+    margin: 0 auto;
+    width: 128px;
 }
 
-#Prev {
-    background-image: url(../icons/prev.png);
+#directions div {
     cursor: pointer;
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
     float: left;
+    padding: 6px;
+    margin-bottom: 4px;
+    background-color: white;
+    border-radius: 2px;
 }
 
-#Next {
-    background-image: url(../icons/next.png);
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    float: left;
+#directions div:focus {
+    background-color: rgba(10, 132, 255, 0.1);
+    box-shadow: inset 0 0 0 2px rgba(10, 132, 255, 0.3);
 }
 
-#Last {
-    background-image: url(../icons/last.png);
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    float: left;
+#directions div:hover {
+    background-color: rgba(10, 132, 255, 0.1);
+}
+
+#directions div:active {
+    background-color: rgba(10, 132, 255, 0.2);
+}
+
+#gotopage {
+    clear: both;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+#gotopage * {
+    margin: auto 1px;
+}
+#PageNum {
+    width: 3.5em;
+}
+
+#OptionsParent {
+    display: flex;
+}
+#Options {
+    color: rgba(12, 12, 13, 0.8);
+    background: #fff;
+    border: 1px solid rgba(12, 12, 13, 0.8);
+    margin: 4px auto auto auto;
+    padding: 4px 8px;
+    font-weight: normal;
+    width: auto;
+    text-decoration: none;
+}
+
+#Options:focus {
+    background-color: rgba(12, 12, 13, 0.1);
+    border: 2px solid rgba(10, 132, 255, 1);
+}
+
+#Options:hover {
+    background-color: rgba(12, 12, 13, 0.1);
+}
+
+#Options:active {
+    background-color: rgba(12, 12, 13, 0.2);
 }
