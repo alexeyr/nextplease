@@ -252,6 +252,13 @@
         // $reset doesn't notify observers
         onOptionsLoaded();
     });
+    $("#import").click(() => browser.windows.create({
+        type: "detached_panel",
+        width: 400,
+        height: 300,
+        url: "nextplease_import.html",
+        titlePreface: browser.i18n.getMessage("optionsImport")
+    }));
 
     $("button").click(e => e.preventDefault());
 

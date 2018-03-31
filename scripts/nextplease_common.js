@@ -4,6 +4,7 @@ const nextplease = {};
 nextplease.prefs = new Configs({
     allowsubmit: false,
     allownumbershortcuts: true,
+    allowcontextmenu: true,
     checkframes: true,
     // TODO add to options.html
     digitDelay: 1000,
@@ -77,7 +78,6 @@ nextplease.notify = function (input) {
         function create() {
             const promise = browser.notifications.create(id, options);
             if (timeout > 0) {
-                console.log(timeout);
                 promise.then((id) => {
                     setTimeout(() => browser.notifications.clear(id), timeout);
                 });

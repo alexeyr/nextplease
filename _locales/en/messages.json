@@ -212,8 +212,35 @@
     "optionsHighlightPrefetched": {
         "message": "Highlight found links"
     },
-    "optionsSave": {
-        "message": "Save options"
+    "optionsImport": {
+        "message": "Import from NextPlease 0.9.*"
+    },
+    "optionsImportExplanation": {
+        "message": "To import settings from old NextPlease versions:<ol><li>Open about:config in a tab (NextPlease itself isn't allowed to do this).</li><li>Enter \"nextplease.\" in the filter field.</li><li>Copy each preference you wish to import and paste it into the field below.</li></ol>"
+    },
+    "optionsImportTitle": {
+        "message": "Preference import"
+    },
+    "optionsImportSuccessful": {
+        "message": "Import succeeded."
+    },
+    "optionsImportNoChange": {
+        "message": "Imported value is the same as current."
+    },
+    "optionsImportError": {
+        "message": "Import failed: $1."
+    },
+    "importErrorBadPreference": {
+        "message": "preference name doesn't start with \"nextplease.\""
+    },
+    "importErrorKey": {
+        "message": "shortcut-related preferences can't be imported, set the shortcut manually instead"
+    },
+    "importErrorBadValue": {
+        "message": "unexpected value for this preference"
+    },
+    "importErrorNotSupported": {
+        "message": "preference not supported in this version"
     },
     "creator": {
         "message": "Created by:"
