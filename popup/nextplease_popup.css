@@ -59,6 +59,7 @@ button {
     color: rgba(12, 12, 13, 0.8);
     background: #fff;
     border: 1px solid rgba(12, 12, 13, 0.8);
+    border-radius: 2px;
     margin: 4px auto auto auto;
     padding: 4px 8px;
     font-weight: normal;
