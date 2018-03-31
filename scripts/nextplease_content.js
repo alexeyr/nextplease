@@ -774,8 +774,9 @@
 
     nextplease.linkNumber = 0;
 
+    nextplease.NumberShortcutTimer = null;
     nextplease.handleNumberShortcut = function (digit) {
-        // no effect if nextplease.NumberShortcutTimer is invalid
+        // no effect if nextplease.NumberShortcutTimer is null
         clearTimeout(nextplease.NumberShortcutTimer);
 
         nextplease.linkNumber = nextplease.linkNumber * 10 + digit;
