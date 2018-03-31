@@ -25,12 +25,13 @@
     pageNumInput.change(goToPage);
     pageNumButton.click(goToPage);
 
-    $("#directions div").click((e) => {
-        const direction = e.target.id;
-        nextplease.sendMessageToActiveTab({ direction: direction });
-    });
+    for (const direction of nextplease.directions) {
+        $(`#${direction}`).click(e => {
+            nextplease.sendMessageToActiveTab({ direction: direction });
+        });
+    }
 
-    $("#Options").click((e) => browser.runtime.openOptionsPage());
+    $("#Options").click(e => browser.runtime.openOptionsPage());
 
     browser.commands.getAll().then(commands => {
         for (const command of commands) {
