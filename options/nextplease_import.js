@@ -80,27 +80,28 @@
         }
     }
 
-    function showError(key) {
-        nextplease.notify({
+    function showResult(properties) {
+        nextplease.notify(Object.assign({
             id: "importResult",
             titleKey: "optionsImportTitle",
-            iconUrl: "/icons/error-16.svg",
-            messageKey: "optionsImportError",
-            messageArgs: [browser.i18n.getMessage(key)],
             timeout: 2000
-        });
+        }, properties));
         importField.val("");
     }
 
+    function showError(key) {
+        showResult({
+            iconUrl: "/icons/error-16.svg",
+            messageKey: "optionsImportError",
+            messageArgs: [browser.i18n.getMessage(key)],
+        });
+    }
+
     function showSuccess(hasChanges) {
-        nextplease.notify({
-            id: "importResult",
-            titleKey: "optionsImportTitle",
+        showResult({
             iconUrl: "/icons/check-16.svg",
             messageKey: hasChanges ? "optionsImportSuccessful" : "optionsImportNoChange",
-            timeout: 2000
         });
-        importField.val("");
     }
 
     function capitalizeFirstLetter(string) {
