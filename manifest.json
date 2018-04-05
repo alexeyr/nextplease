@@ -120,8 +120,7 @@
         "activeTab",
         "storage",
         "notifications",
-        "contextMenus",
-        "<all_urls>"
+        "contextMenus"
     ],
 
     "background": {
@@ -129,6 +128,10 @@
     },
 
     "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["scripts/nextplease_menu.js"]
+        },
         {
             "matches": ["<all_urls>"],
             "js": ["lib/configs/Configs.js", "scripts/nextplease_common.js", "scripts/nextplease_content.js"]
