@@ -114,3 +114,13 @@ nextplease.sendMessageToActiveTab = function(message, handleError = nextplease.l
 nextplease.normalize = function(text) {
     return text.trim().normalize("NFD").toLowerCase();
 };
+
+nextplease.isEnter = function(e) {
+    const keyCode = e.keyCode;
+    return keyCode === KeyboardEvent.DOM_VK_ENTER || keyCode === KeyboardEvent.DOM_VK_RETURN;
+};
+
+nextplease.isDelete = function(e) {
+    const keyCode = e.keyCode;
+    return keyCode === KeyboardEvent.DOM_VK_DELETE || keyCode === KeyboardEvent.DOM_VK_BACK_SPACE;
+};

@@ -216,7 +216,7 @@
         "message": "Import from NextPlease 0.9.*"
     },
     "optionsImportExplanation": {
-        "message": "To import settings from old NextPlease versions:<ol><li>Open about:config in a tab (NextPlease itself isn't allowed to do this).</li><li>Enter \"nextplease.\" in the filter field.</li><li>Copy each preference you wish to import and paste it into the field below.</li></ol>"
+        "message": "To import settings from old NextPlease versions:<ol><li>Open about:config in a tab (NextPlease itself isn't allowed to do this).</li><li>Enter \"nextplease.\" in the filter field.</li><li>Copy each preference you wish to import and paste it into the field below.</li><li>You may need to press Enter key depending on your Firefox preferences.</li></ol>"
     },
     "optionsImportTitle": {
         "message": "Preference import"

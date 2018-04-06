@@ -6,7 +6,7 @@
     // setTimeout to trigger after value changes
     importField.on("paste", () => setTimeout(handleImport, 0));
     importField.on("keypress", e => {
-        if (e.keyCode === KeyboardEvent.DOM_VK_ENTER) {
+        if (nextplease.isEnter(e)) {
             setTimeout(handleImport, 0);
         }
     });

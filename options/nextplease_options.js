@@ -83,7 +83,7 @@
             this.setCustomValidity(errorMessage);
             addButton.attr("disabled", !valid);
 
-            if (valid && e.keyCode === KeyboardEvent.DOM_VK_ENTER) {
+            if (valid && nextplease.isEnter(e)) {
                 addValue();
             }
         });
@@ -104,7 +104,7 @@
 
         removeButton.click(removeSelectedValues);
         listbox.keyup(function (e) {
-            if (e.keyCode === KeyboardEvent.DOM_VK_BACK_SPACE || e.keyCode === KeyboardEvent.DOM_VK_DELETE) {
+            if (nextplease.isDelete(e)) {
                 removeSelectedValues();
             }
         });
